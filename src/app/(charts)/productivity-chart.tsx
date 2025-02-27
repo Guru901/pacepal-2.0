@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Loader } from "@/components/Loading";
+import { Loader } from "@/components/loading";
 import { productivityChartConfig } from "@/lib/chart-configs";
 
 export function ProductivityChart({
@@ -33,7 +33,7 @@ export function ProductivityChart({
       try {
         setLoading(true);
         const { data } = await axios.get(
-          `/api/get-productivity-data?id=${userId}&version=${selectedVersion}`
+          `/api/get-productivity-data?id=${userId}&version=${selectedVersion}`,
         );
         if (data.success) {
           setData(
@@ -42,7 +42,7 @@ export function ProductivityChart({
                 ...item,
                 date: item.date.split("/").reverse().join("-"),
               }))
-              .reverse()
+              .reverse(),
           );
         }
       } catch (error) {
@@ -94,7 +94,7 @@ export function ProductivityChart({
                     {
                       month: "short",
                       day: "numeric",
-                    }
+                    },
                   );
                 }}
               />
@@ -106,7 +106,7 @@ export function ProductivityChart({
                     labelFormatter={(value) => {
                       const [year, month, day] = value.split("-");
                       return new Date(
-                        `${year}-${month}-${day}`
+                        `${year}-${month}-${day}`,
                       ).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",

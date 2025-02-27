@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import axios from "axios";
-import { Loader } from "@/components/Loading";
+import { Loader } from "@/components/loading";
 import { sleepChartConfig } from "@/lib/chart-configs";
 
 export function SleepChart({
@@ -67,12 +67,12 @@ export function SleepChart({
       try {
         setLoading(true);
         const { data } = await axios.get(
-          `/api/get-sleep-data?id=${userId}&version=${selectedVersion}`
+          `/api/get-sleep-data?id=${userId}&version=${selectedVersion}`,
         );
         if (data.success) {
           const filteredData = filterDataByTimeRange(
             data.data.forms,
-            timeRange
+            timeRange,
           );
 
           // @ts-expect-error FIXME

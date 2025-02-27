@@ -1,4 +1,4 @@
-import { Loader } from "@/components/Loading";
+import { Loader } from "@/components/loading";
 import {
   Card,
   CardContent,

@@ -15,7 +15,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import axios from "axios";
-import { Loader } from "@/components/Loading";
+import { Loader } from "@/components/loading";
 import { workChartConfig } from "@/lib/chart-configs";
 
 export function WorkChart({
@@ -34,7 +34,7 @@ export function WorkChart({
       try {
         setisLoading(true);
         const { data } = await axios.get(
-          `/api/get-work-data?id=${userId}&version=${selectedVersion}`
+          `/api/get-work-data?id=${userId}&version=${selectedVersion}`,
         );
 
         if (data.success) {
@@ -55,7 +55,7 @@ export function WorkChart({
 
                 const desiredPeriod = desiredHours.find(
                   // @ts-expect-error FIXME
-                  (d) => d.name.toLowerCase() === periodName.toLowerCase()
+                  (d) => d.name.toLowerCase() === periodName.toLowerCase(),
                 );
 
                 if (desiredPeriod) {
@@ -68,7 +68,7 @@ export function WorkChart({
               });
 
               return dataForDate;
-            }
+            },
           );
 
           setChartData(combinedChartData);
@@ -92,7 +92,7 @@ export function WorkChart({
         {loading ? (
           <Loader />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {desiredWorkHrs?.map((item: { name: string; hours: number }) => (
               <Card key={item.name} className="m-2">
                 <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
@@ -173,7 +173,7 @@ export function WorkChart({
                                   {
                                     month: "short",
                                     day: "numeric",
-                                  }
+                                  },
                                 );
                               }}
                               indicator="dot"
@@ -203,7 +203,7 @@ export function WorkChart({
                       </AreaChart>
                     </ChartContainer>
                   ) : (
-                    <p className="text-center text-muted-foreground">
+                    <p className="text-muted-foreground text-center">
                       No data available for {item.name}
                     </p>
                   )}

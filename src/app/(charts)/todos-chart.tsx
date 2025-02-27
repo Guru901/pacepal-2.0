@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader } from "@/components/Loading";
+import { Loader } from "@/components/loading";
 import { todosChartConfig } from "@/lib/chart-configs";
 
 type TodoData = {
@@ -42,7 +42,7 @@ export function TodosChart({
 
   const filterDataByTimeRange = (
     data: TodoData[],
-    range: string
+    range: string,
   ): TodoData[] => {
     const now = new Date();
     const startDate = new Date();
@@ -67,7 +67,7 @@ export function TodosChart({
       try {
         setLoading(true);
         const { data } = await axios.get(
-          `/api/get-todos-data?id=${userId}&version=${selectedVersion}`
+          `/api/get-todos-data?id=${userId}&version=${selectedVersion}`,
         );
         if (data.success) {
           const formattedData = data.data.todos.map((item: TodoData) => ({
@@ -90,7 +90,7 @@ export function TodosChart({
               }).format(new Date(item.createdAt!)),
               tasksPlanned: item.tasksPlanned,
               tasksCompleted: item.tasksCompleted,
-            })
+            }),
           );
 
           setChartData(transformedData);

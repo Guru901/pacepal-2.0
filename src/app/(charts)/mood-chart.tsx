@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Loader } from "@/components/Loading";
+import { Loader } from "@/components/loading";
 import { moodCharConfig as moodChartConfig } from "@/lib/chart-configs";
 
 export function MoodChart({
@@ -39,7 +39,7 @@ export function MoodChart({
       try {
         setLoading(true);
         const { data } = await axios.get(
-          `/api/get-mood-data?id=${userId}&version=${selectedVersion}`
+          `/api/get-mood-data?id=${userId}&version=${selectedVersion}`,
         );
 
         if (data.success) {
@@ -64,7 +64,7 @@ export function MoodChart({
               ...item,
               // @ts-expect-error - TypeScript doesn't recognize the `hasOwnProperty` method
               freq: moodCounts[item.mood],
-            }))
+            })),
           );
         }
       } catch (error) {
@@ -76,7 +76,7 @@ export function MoodChart({
   }, [userId, selectedVersion]);
 
   return (
-    <Card className="flex flex-col w-[50vw]">
+    <Card className="flex w-[50vw] flex-col">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>Mood Chart</CardTitle>
@@ -89,7 +89,7 @@ export function MoodChart({
         <CardContent className="flex-1 pb-0">
           <ChartContainer
             config={moodChartConfig}
-            className="mx-auto aspect-square max-h-[250px] [&_.recharts-text]:fill-background"
+            className="[&_.recharts-text]:fill-background mx-auto aspect-square max-h-[250px]"
           >
             <PieChart width={7300} height={250}>
               <ChartTooltip
