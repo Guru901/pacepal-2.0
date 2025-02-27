@@ -64,3 +64,52 @@ export const DailyFormSchema = z.object({
 });
 
 export type DailyFormData = z.infer<typeof DailyFormSchema>;
+
+export const GetChartsDataSchema = z.object({
+  id: z.string().min(1, "User ID is required"),
+  version: z.string().min(1, "Version is required"),
+});
+
+export const OnBoardUserSchema = z.object({
+  email: z.string().email().min(1, "Email is required"),
+  id: z.string().min(1, "User ID is required"),
+  picture: z.string().min(1, "Picture is required"),
+  given_name: z.string().min(1, "Given name is required"),
+  isOnBoarded: z.boolean(),
+  slots: z.array(SlotSchema),
+  desiredSleepHours: z.number(),
+  version: z.string().min(1, "Version is required"),
+});
+
+export const SubmitFormSchema = z.object({
+  userId: z.string().min(1, "User ID is required"),
+  productivity: z.string().min(1, "Please select a productivity rating"),
+  tasksCompleted: z
+    .number()
+    .int()
+    .min(0, "Tasks completed must be 0 or greater"),
+  selectedVersion: z.string().min(1, "Please select a version"),
+  tasksPlanned: z.number().int().min(0, "Tasks planned must be 0 or greater"),
+  sleptWell: z.enum(["yes", "no"]),
+  distractions: z.enum(["yes", "no"]),
+  distractionsList: z.string().optional(),
+  mood: z.enum(["happy", "tired", "neutral", "stressed", "productive"]),
+  hoursSlept: z.number().min(0, "Hours slept must be 0 or greater"),
+  hoursWorked: z.array(z.object({ name: z.string(), hours: z.number() })),
+  overWork: z.number().min(0),
+  hoursPlanned: z.number().int().min(0, "Hours planned must be 0 or greater"),
+  followedSchedule: z.enum(["yes", "no"]),
+  version: z.string().min(1, "Version is required"),
+});
+
+export const UpdateSlotsSchema = z.object({
+  id: z.string().min(1, "User ID is required"),
+  slots: z.array(SlotSchema),
+  version: z.string().min(1, "Version is required"),
+});
+
+export const UpdateSleepSchema = z.object({
+  id: z.string().min(1, "User ID is required"),
+  desiredSleepHours: z.number().min(6, "Minimum sleep hours is 6"),
+  version: z.string().min(1, "Version is required"),
+});

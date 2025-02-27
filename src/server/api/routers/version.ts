@@ -8,17 +8,7 @@ import { TRPCError } from "@trpc/server";
 export const versionRouter = createTRPCRouter({
   add: publicProcedure.input(ScheduleSchema).mutation(async ({ input }) => {
     try {
-      const safeInput = ScheduleSchema.safeParse(input);
-
-      if (!safeInput.success) {
-        throw new TRPCError({
-          message: "Validation error",
-          code: "BAD_REQUEST",
-        });
-      }
-
-      const { desiredSleepHours, studySlots, userId, versionName } =
-        safeInput.data;
+      const { desiredSleepHours, studySlots, userId, versionName } = input;
 
       const user = await User.findById(userId);
 
