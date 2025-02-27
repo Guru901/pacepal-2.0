@@ -1,10 +1,10 @@
 import { GetChartsDataSchema } from "@/lib/schema";
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { createTRPCRouter, dbProcedure } from "@/server/api/trpc";
 import { Form } from "@/server/database/models/form-model";
 import { User } from "@/server/database/models/user-model";
 
 export const chartsRouter = createTRPCRouter({
-  getDistractionsData: publicProcedure
+  getDistractionsData: dbProcedure
     .input(GetChartsDataSchema)
     .query(async ({ input }) => {
       const { id, version } = input;
@@ -43,7 +43,7 @@ export const chartsRouter = createTRPCRouter({
       };
     }),
 
-  getMoodData: publicProcedure
+  getMoodData: dbProcedure
     .input(GetChartsDataSchema)
     .query(async ({ input }) => {
       const { id, version } = input;
@@ -66,7 +66,7 @@ export const chartsRouter = createTRPCRouter({
       };
     }),
 
-  getOverworkData: publicProcedure
+  getOverworkData: dbProcedure
     .input(GetChartsDataSchema)
     .query(async ({ input }) => {
       const { id, version } = input;
@@ -86,7 +86,7 @@ export const chartsRouter = createTRPCRouter({
       };
     }),
 
-  getPenaltyData: publicProcedure
+  getPenaltyData: dbProcedure
     .input(GetChartsDataSchema)
     .query(async ({ input }) => {
       const { id, version: versionName } = input;
@@ -130,7 +130,7 @@ export const chartsRouter = createTRPCRouter({
       };
     }),
 
-  getProductivityData: publicProcedure
+  getProductivityData: dbProcedure
     .input(GetChartsDataSchema)
     .query(async ({ input }) => {
       const { id, version } = input;
@@ -173,7 +173,7 @@ export const chartsRouter = createTRPCRouter({
       };
     }),
 
-  getSleepData: publicProcedure
+  getSleepData: dbProcedure
     .input(GetChartsDataSchema)
     .query(async ({ input }) => {
       const { id, version: versionFromClient } = input;
@@ -221,7 +221,7 @@ export const chartsRouter = createTRPCRouter({
       };
     }),
 
-  getTodosData: publicProcedure
+  getTodosData: dbProcedure
     .input(GetChartsDataSchema)
     .query(async ({ input }) => {
       const { id, version } = input;
@@ -244,7 +244,7 @@ export const chartsRouter = createTRPCRouter({
       };
     }),
 
-  getWorkData: publicProcedure
+  getWorkData: dbProcedure
     .input(GetChartsDataSchema)
     .query(async ({ input }) => {
       const { id, version: versionFromClient } = input;

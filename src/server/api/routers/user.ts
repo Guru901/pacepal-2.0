@@ -1,4 +1,4 @@
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { createTRPCRouter, dbProcedure } from "@/server/api/trpc";
 import { z } from "zod";
 import { User } from "@/server/database/models/user-model";
 import {
@@ -8,7 +8,7 @@ import {
 } from "@/lib/schema";
 
 export const userRouter = createTRPCRouter({
-  me: publicProcedure.input(z.string()).query(async ({ input }) => {
+  me: dbProcedure.input(z.string()).query(async ({ input }) => {
     const kindeId = input;
 
     const user = await User.findOne({ kindeId });
@@ -46,7 +46,7 @@ export const userRouter = createTRPCRouter({
     };
   }),
 
-  onboardUser: publicProcedure
+  onboardUser: dbProcedure
     .input(OnBoardUserSchema)
     .mutation(async ({ input }) => {
       const {
@@ -89,7 +89,7 @@ export const userRouter = createTRPCRouter({
       };
     }),
 
-  updateSlots: publicProcedure
+  updateSlots: dbProcedure
     .input(UpdateSlotsSchema)
     .mutation(async ({ input }) => {
       const { id, slots, version } = input;
@@ -120,7 +120,7 @@ export const userRouter = createTRPCRouter({
       return { success: true, user, data: { versions } };
     }),
 
-  updateSleep: publicProcedure
+  updateSleep: dbProcedure
     .input(UpdateSleepSchema)
     .mutation(async ({ input }) => {
       const { id, desiredSleepHours, version } = input;

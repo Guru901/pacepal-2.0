@@ -1,11 +1,11 @@
 import { ScheduleSchema } from "@/lib/schema";
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { createTRPCRouter, dbProcedure } from "@/server/api/trpc";
 import { User } from "@/server/database/models/user-model";
 import { MongooseError } from "mongoose";
 import { TRPCError } from "@trpc/server";
 
 export const versionRouter = createTRPCRouter({
-  add: publicProcedure.input(ScheduleSchema).mutation(async ({ input }) => {
+  add: dbProcedure.input(ScheduleSchema).mutation(async ({ input }) => {
     try {
       const { desiredSleepHours, studySlots, userId, versionName } = input;
 
