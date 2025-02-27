@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Loader } from "@/components/loading";
 import { sleepChartConfig } from "@/lib/chart-configs";
+import { api } from "@/trpc/react";
 
 export function SleepChart({
   userId,
@@ -64,24 +65,26 @@ export function SleepChart({
     void (async () => {
       try {
         setLoading(true);
-        // const { data } = await axios.get(
-        //   `/api/get-sleep-data?id=${userId}&version=${selectedVersion}`,
-        // );
-        // if (data.success) {
-        //   const filteredData = filterDataByTimeRange(
-        //     data.data.forms,
-        //     timeRange,
-        //   );
+        const { data } = api.charts.getSleepData.useQuery({
+          id: userId,
+          version: selectedVersion,
+        });
+        if (data?.success) {
+          const filteredData = filterDataByTimeRange(
+            data.data.forms,
+            timeRange,
+          );
 
-        //   // @ts-expect-error FIXME
-        //   const transformedData = filteredData.map((item) => ({
-        //     date: new Date(item.createdAt).toLocaleDateString("en-US"),
-        //     actual_sleeping_hrs: item.hoursSlept,
-        //     desired_sleep_hrs: data.data.desiredSleepHours[0],
-        //   }));
+          const transformedData = filteredData.map(
+            (item: { createdAt: string; hoursSlept: number }) => ({
+              date: new Date(item.createdAt).toLocaleDateString("en-US"),
+              actual_sleeping_hrs: item.hoursSlept,
+              desired_sleep_hrs: data.data.desiredSleepHours[0] ?? 0,
+            }),
+          );
 
-        //   setChartData(transformedData);
-        // }
+          setChartData(transformedData);
+        }
       } catch (error) {
         console.error("Error fetching sleep data:", error);
       } finally {

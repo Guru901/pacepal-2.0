@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { api } from "@/trpc/react";
 import { useEffect, useState } from "react";
 
 export function Penalty({
@@ -21,11 +22,14 @@ export function Penalty({
   useEffect(() => {
     void (async () => {
       try {
-        // setLoading(true);
-        // const { data } = await axios.get(
-        //   `/api/get-penalty?id=${userId}&version=${selectedVersion}`,
-        // );
-        // setPenalty(data.data.penalty);
+        setLoading(true);
+        const { data } = api.charts.getPenaltyData.useQuery({
+          id: userId,
+          version: selectedVersion,
+        });
+        if (data) {
+          setPenalty(data.data.penalty);
+        }
       } catch (error) {
         console.error(error);
         setPenalty(0);

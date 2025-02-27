@@ -13,9 +13,7 @@ export const env = createEnv({
     KINDE_ISSUER_URL: z.string(),
   },
 
-  client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
-  },
+  client: {},
 
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,

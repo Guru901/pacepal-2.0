@@ -27,7 +27,9 @@ export const versionRouter = createTRPCRouter({
       });
 
       await user.save();
-      return { success: true, message: "Version added" };
+      const versions = user.versions;
+
+      return { success: true, message: "Version added", data: { versions } };
     } catch (error) {
       if (error instanceof MongooseError) {
         throw new TRPCError({

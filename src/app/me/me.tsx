@@ -10,6 +10,7 @@ import useGetUser from "@/hooks/use-get-user";
 import { useUserStore } from "@/store/user-store";
 import { useVersionStore } from "@/store/version-store";
 import { useEffect, useState } from "react";
+import { api } from "@/trpc/react";
 
 export default function Me() {
   const [isEditingSleep, setIsEditingSleep] = useState(false);
@@ -30,29 +31,30 @@ export default function Me() {
 
   const handleSaveSleepHours = async () => {
     try {
-      // const hours = parseFloat(desiredSleepHours);
-      // if (isNaN(hours) || hours < 0 || hours > 24) {
-      //   alert("Please enter a valid number of sleep hours (0-24)");
-      //   return;
-      // }
-      // const { data } = await axios.post("/api/update-user-sleeping-hrs", {
-      //   id: localUser?.mongoId,
-      //   desiredSleepHours: hours,
-      //   version: selectedVersion,
-      // });
-      // if (data.success) {
-      //   setIsEditingSleep(false);
-      //   setUser({
-      //     versions: data.data.versions,
-      //     email: localUser?.email as string,
-      //     id: localUser?.mongoId as string,
-      //     picture: localUser?.picture as string,
-      //     given_name: localUser?.given_name as string,
-      //     isOnBoarded: true,
-      //     mongoId: localUser?.mongoId as string,
-      //   });
-      //   setIsEditingSleep(false);
-      // }
+      const hours = parseFloat(desiredSleepHours);
+      if (isNaN(hours) || hours < 0 || hours > 24) {
+        alert("Please enter a valid number of sleep hours (0-24)");
+        return;
+      }
+      const { data, mutate } = api.user.updateSleep.useMutation();
+      mutate({
+        id: localUser?.mongoId,
+        desiredSleepHours: hours,
+        version: selectedVersion,
+      });
+      if (data?.success) {
+        setIsEditingSleep(false);
+        setUser({
+          versions: data.data.versions,
+          email: localUser?.email as string,
+          id: localUser?.mongoId as string,
+          picture: localUser?.picture as string,
+          given_name: localUser?.given_name as string,
+          isOnBoarded: true,
+          mongoId: localUser?.mongoId as string,
+        });
+        setIsEditingSleep(false);
+      }
     } catch (error) {
       console.error("Failed to update sleep hours", error);
       alert("Failed to update sleep hours");
@@ -61,35 +63,39 @@ export default function Me() {
 
   const handleSaveSlots = async () => {
     try {
-      // const validSlots = editableSlots.filter(
-      //   (slot) =>
-      //     slot.name.trim() !== "" &&
-      //     !isNaN(parseFloat(String(slot.hours))) &&
-      //     parseFloat(String(slot.hours)) >= 0 &&
-      //     parseFloat(String(slot.hours)) <= 24,
-      // );
-      // if (validSlots.length !== editableSlots.length) {
-      //   alert("Please ensure all slots have a valid name and hours (0-24)");
-      //   return;
-      // }
-      // const { data } = await axios.post("/api/update-user-slots", {
-      //   id: localUser?.mongoId,
-      //   slots: validSlots,
-      //   version: selectedVersion,
-      // });
-      // if (data.success) {
-      //   setUser({
-      //     versions: data.data.versions,
-      //     email: localUser?.email as string,
-      //     id: localUser?.mongoId as string,
-      //     picture: localUser?.picture as string,
-      //     given_name: localUser?.given_name as string,
-      //     isOnBoarded: true,
-      //     mongoId: localUser?.mongoId as string,
-      //   });
-      //   setIsEditingSlots(false);
-      //   return;
-      // }
+      const validSlots = editableSlots.filter(
+        (slot) =>
+          slot.name.trim() !== "" &&
+          !isNaN(parseFloat(String(slot.hours))) &&
+          parseFloat(String(slot.hours)) >= 0 &&
+          parseFloat(String(slot.hours)) <= 24,
+      );
+      if (validSlots.length !== editableSlots.length) {
+        alert("Please ensure all slots have a valid name and hours (0-24)");
+        return;
+      }
+
+      const { data, mutate } = api.user.updateSlots.useMutation();
+
+      mutate({
+        id: localUser?.mongoId,
+        slots: validSlots,
+        version: selectedVersion,
+      });
+
+      if (data?.success) {
+        setUser({
+          versions: data.data.versions,
+          email: localUser?.email as string,
+          id: localUser?.mongoId as string,
+          picture: localUser?.picture as string,
+          given_name: localUser?.given_name as string,
+          isOnBoarded: true,
+          mongoId: localUser?.mongoId as string,
+        });
+        setIsEditingSlots(false);
+        return;
+      }
     } catch (error) {
       console.error("Failed to update slots", error);
       alert("Failed to update slots");

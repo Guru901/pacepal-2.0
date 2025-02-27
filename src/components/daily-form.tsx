@@ -25,6 +25,7 @@ import { useState } from "react";
 import { useVersionStore } from "@/store/version-store";
 import useGetUser from "@/hooks/use-get-user";
 import { DailyFormData, DailyFormSchema } from "@/lib/schema";
+import { api } from "@/trpc/react";
 
 export function DailyForm() {
   const { localUser: user } = useGetUser();
@@ -59,16 +60,37 @@ export function DailyForm() {
   async function onSubmit(formData: DailyFormData) {
     setIsSubmitting(true);
     if (!formData.userId) return;
-    // setValue("userId", user?.mongoId as string);
+    setValue("userId", user?.mongoId as string);
+
+    const hoursPlanned = user.versions
+      .find((version) => version.versionName === selectedVersion)
+      ?.data.slots.reduce((acc, slot) => {
+        return acc + slot.hours;
+      }, 0);
 
     try {
-      // const { data } = await axios.post("/api/submit-form", {
-      //   ...formData,
-      // });
-      // if (data.success) {
-      //   location.reload();
-      // }
-      // setIsSubmitting(false);
+      const { mutate, data } = api.form.submitForm.useMutation();
+      mutate({
+        version: selectedVersion,
+        userId: user?.mongoId,
+        selectedVersion: selectedVersion,
+        distractions: formData.distractions,
+        distractionsList: formData.distractionsList,
+        mood: formData.mood,
+        hoursSlept: formData.hoursSlept,
+        overWork: formData.overWork,
+        productivity: formData.productivity,
+        sleptWell: formData.sleptWell,
+        tasksCompleted: formData.tasksCompleted,
+        tasksPlanned: formData.tasksPlanned,
+        hoursPlanned: hoursPlanned ?? 0,
+        hoursWorked: formData.hoursWorked,
+        followedSchedule: formData.followedSchedule,
+      });
+      if (data?.success) {
+        location.reload();
+      }
+      setIsSubmitting(false);
     } catch (error) {
       console.error(error);
       alert("Error submitting reflection. Please try again.");

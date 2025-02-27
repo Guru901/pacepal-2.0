@@ -16,6 +16,7 @@ import {
 import { useEffect, useState } from "react";
 import { Loader } from "@/components/loading";
 import { productivityChartConfig } from "@/lib/chart-configs";
+import { api } from "@/trpc/react";
 
 export function ProductivityChart({
   userId,
@@ -25,25 +26,30 @@ export function ProductivityChart({
   selectedVersion: string;
 }) {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<
+    Array<{
+      date: string;
+    }>
+  >([]);
 
   useEffect(() => {
     void (async () => {
       try {
         setLoading(true);
-        // const { data } = await axios.get(
-        //   `/api/get-productivity-data?id=${userId}&version=${selectedVersion}`,
-        // );
-        // if (data.success) {
-        //   setData(
-        //     data.data.productivityData
-        //       .map((item: { date: string }) => ({
-        //         ...item,
-        //         date: item.date.split("/").reverse().join("-"),
-        //       }))
-        //       .reverse(),
-        //   );
-        // }
+        const { data } = api.charts.getProductivityData.useQuery({
+          id: userId,
+          version: selectedVersion,
+        });
+        if (data?.success) {
+          setData(
+            data.data.productivityData
+              .map((item: { date: string }) => ({
+                ...item,
+                date: item.date.split("/").reverse().join("-"),
+              }))
+              .reverse(),
+          );
+        }
       } catch (error) {
         console.error("Error fetching productivity data:", error);
       } finally {

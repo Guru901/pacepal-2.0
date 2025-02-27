@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useEffect, useState } from "react";
+import { api } from "@/trpc/react";
 
 export function OverworkChart({
   userId,
@@ -22,11 +23,14 @@ export function OverworkChart({
   useEffect(() => {
     void (async () => {
       try {
-        // setLoading(true);
-        // const { data } = await axios.get(
-        //   `/api/get-overwork-data?id=${userId}&version=${selectedVersion}`,
-        // );
-        // setOverWork(data.data.overWork);
+        setLoading(true);
+        const { data } = api.charts.getOverworkData.useQuery({
+          id: userId,
+          version: selectedVersion,
+        });
+        if (data) {
+          setOverWork(data.data.overWork);
+        }
       } catch (error) {
         console.error(error);
         setOverWork(0);

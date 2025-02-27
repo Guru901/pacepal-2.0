@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { useVersionStore } from "@/store/version-store";
 import { useUserStore } from "@/store/user-store";
 import { ScheduleSchema, ScheduleFormData } from "@/lib/schema";
+import { api } from "@/trpc/react";
 
 export default function VersionForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,40 +53,41 @@ export default function VersionForm() {
     0,
   );
 
-  // const onSubmit = async (formData: ScheduleFormData) => {
-  //   setIsSubmitting(true);
-  //   if (!formData.userId) {
-  //     setValue("userId", localUser?.mongoId as string);
-  //   }
-  //   try {
-  //     const { data } = await axios.post(`/api/add-version`, {
-  //       userId: formData.userId,
-  //       versionName: formData.versionName,
-  //       desiredSleepHours: formData.desiredSleepHours,
-  //       studySlots: formData.studySlots,
-  //     });
-  //     if (data.success) {
-  //       setSelectedVersion(formData.versionName);
-  //       setUser({
-  //         email: localUser?.email as string,
-  //         id: localUser?.mongoId as string,
-  //         picture: localUser?.picture,
-  //         given_name: localUser?.given_name as string,
-  //         isOnBoarded: true,
-  //         mongoId: localUser?.mongoId as string,
-  //         versions: data.data.versions,
-  //       });
-  //       router.push("/");
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  //   setIsSubmitting(false);
-  // };
+  const onSubmit = async (formData: ScheduleFormData) => {
+    setIsSubmitting(true);
+    if (!formData.userId) {
+      setValue("userId", localUser?.mongoId as string);
+    }
+    try {
+      const { mutate, data } = api.version.add.useMutation({});
+      mutate({
+        userId: formData.userId,
+        versionName: formData.versionName,
+        desiredSleepHours: formData.desiredSleepHours,
+        studySlots: formData.studySlots,
+      });
+      if (data?.success) {
+        setSelectedVersion(formData.versionName);
+        setUser({
+          email: localUser?.email as string,
+          id: localUser?.mongoId as string,
+          picture: localUser?.picture,
+          given_name: localUser?.given_name as string,
+          isOnBoarded: true,
+          mongoId: localUser?.mongoId as string,
+          versions: data.data.versions,
+        });
+        router.push("/");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    setIsSubmitting(false);
+  };
   return (
     <>
       <CardContent>
-        <form /*onSubmit={handleSubmit(onSubmit)} */ className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="versionName">Version Name</Label>
             <Input

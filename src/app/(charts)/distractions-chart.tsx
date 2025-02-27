@@ -12,6 +12,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { distractionsChartConfig } from "@/lib/chart-configs";
+import { api } from "@/trpc/react";
 import { useEffect, useState } from "react";
 import { LabelList, Pie, PieChart } from "recharts";
 
@@ -39,19 +40,21 @@ export function DistractionsChart({
     void (async () => {
       try {
         setLoading(true);
-        // const { data } = await axios.get(
-        //   `/api/get-distractions-data?id=${userId}&version=${selectedVersion}`,
-        // );
-        // if (data.success) {
-        //   const distractionCounts = data.data.distractions.reduce(
-        //     (acc: { [key: string]: number }, distraction: string) => {
-        //       acc[distraction] = (acc[distraction] || 0) + 1;
-        //       return acc;
-        //     },
-        //     {},
-        //   );
-        //   setDistractions(distractionCounts);
-        // }
+
+        const { data } = api.charts.getDistractionsData.useQuery({
+          id: userId,
+          version: selectedVersion,
+        });
+        if (data?.success) {
+          const distractionCounts = data.data.distractions.reduce(
+            (acc: Record<string, number>, distraction: string) => {
+              acc[distraction] = (acc[distraction] ?? 0) + 1;
+              return acc;
+            },
+            {},
+          );
+          setDistractions(distractionCounts);
+        }
       } catch (error) {
         console.error("Error fetching distractions data:", error);
       } finally {
@@ -85,7 +88,7 @@ export function DistractionsChart({
           <CardContent className="flex-1 pb-0">
             <ChartContainer
               config={distractionsChartConfig}
-              className="[&_.recharts-text]:fill-background mx-auto aspect-square max-h-[250px]"
+              className="mx-auto aspect-square max-h-[250px] [&_.recharts-text]:fill-background"
             >
               <PieChart>
                 <ChartTooltip

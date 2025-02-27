@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/chart";
 import { Loader } from "@/components/loading";
 import { workChartConfig } from "@/lib/chart-configs";
+import { api } from "@/trpc/react";
 
 export function WorkChart({
   userId,
@@ -24,54 +25,63 @@ export function WorkChart({
   userId: string;
   selectedVersion: string;
 }) {
-  const [desiredWorkHrs, setDesiredWorkHrs] = useState([]);
-  const [chartData, setChartData] = useState([]);
+  const [desiredWorkHrs, setDesiredWorkHrs] = useState<
+    Array<{
+      name: string;
+      hours: number;
+    }>
+  >([]);
+  const [chartData, setChartData] = useState<
+    Array<{
+      date: string;
+    }>
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     void (async () => {
       try {
         setIsLoading(true);
-        // const { data } = await axios.get(
-        //   `/api/get-work-data?id=${userId}&version=${selectedVersion}`,
-        // );
+        const { data } = api.charts.getWorkData.useQuery({
+          id: userId,
+          version: selectedVersion,
+        });
 
-        // if (data.success) {
-        //   const desiredHours = data.data.desiredWorkingHours[0];
-        //   setDesiredWorkHrs(desiredHours);
+        if (data?.success && data.data.desiredWorkingHours) {
+          const desiredHours = data.data.desiredWorkingHours[0]!;
+          setDesiredWorkHrs(desiredHours);
 
-        //   const combinedChartData = data.data.forms?.map(
-        //     (form: {
-        //       hoursPlanned: number;
-        //       hoursWorked: { name: string; hours: number }[];
-        //       createdAt: string;
-        //     }) => {
-        //       const date = new Date(form.createdAt).toLocaleDateString("en-US");
-        //       const dataForDate = { date };
+          const combinedChartData = data.data.forms?.map(
+            (form: {
+              hoursPlanned: number;
+              hoursWorked: { name: string; hours: number }[];
+              createdAt: string;
+            }) => {
+              const date = new Date(form.createdAt).toLocaleDateString("en-US");
+              const dataForDate = { date };
 
-        //       form.hoursWorked.forEach((entry) => {
-        //         const periodName = entry.name;
+              form.hoursWorked.forEach((entry) => {
+                const periodName = entry.name;
 
-        //         const desiredPeriod = desiredHours.find(
-        //           // @ts-expect-error FIXME
-        //           (d) => d.name.toLowerCase() === periodName.toLowerCase(),
-        //         );
+                const desiredPeriod = desiredHours.find(
+                  (d) => d.name.toLowerCase() === periodName.toLowerCase(),
+                );
 
-        //         if (desiredPeriod) {
-        //           // @ts-expect-error FIXME
-        //           dataForDate[periodName] = {
-        //             actual_working_hrs: entry.hours,
-        //             desired_working_hrs: desiredPeriod.hours,
-        //           };
-        //         }
-        //       });
+                if (desiredPeriod) {
+                  // @ts-expect-error FIXME
+                  dataForDate[periodName] = {
+                    actual_working_hrs: entry.hours,
+                    desired_working_hrs: desiredPeriod.hours,
+                  };
+                }
+              });
 
-        //       return dataForDate;
-        //     },
-        // );
+              return dataForDate;
+            },
+          );
 
-        //   setChartData(combinedChartData);
-        // }
+          setChartData(combinedChartData);
+        }
       } catch (error) {
         console.error("Error fetching work data:", error);
       } finally {
@@ -206,7 +216,7 @@ export function WorkChart({
                       </AreaChart>
                     </ChartContainer>
                   ) : (
-                    <p className="text-muted-foreground text-center">
+                    <p className="text-center text-muted-foreground">
                       No data available for {item.name}
                     </p>
                   )}

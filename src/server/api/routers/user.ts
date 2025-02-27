@@ -14,13 +14,35 @@ export const userRouter = createTRPCRouter({
     const user = await User.findOne({ kindeId });
 
     if (!user) {
-      return { message: "User not saved yet", success: false, data: user };
+      return {
+        message: "User not saved yet",
+        success: false,
+        user: {
+          email: "",
+          id: "",
+          picture: "",
+          given_name: "",
+          isOnBoarded: false,
+          mongoId: "",
+          versions: [],
+        },
+      };
     }
 
     return {
       success: true,
       message: "User Found",
-      data: user,
+      user: {
+        email: user.email,
+        id: user.kindeId,
+        picture: user.picture,
+        given_name: user.given_name,
+        isOnBoarded: user.isOnBoarded,
+        mongoId: user._id,
+        versions: user.versions,
+        kindeId: user.kindeId,
+        _id: user._id,
+      },
     };
   }),
 
@@ -89,6 +111,7 @@ export const userRouter = createTRPCRouter({
         return {
           message: "User not saved yet",
           success: false,
+          data: { versions: [] },
         };
       }
 
@@ -103,7 +126,11 @@ export const userRouter = createTRPCRouter({
       const { id, desiredSleepHours, version } = input;
 
       if (!id || !desiredSleepHours) {
-        return { message: "Missing required parameters", success: false };
+        return {
+          message: "Missing required parameters",
+          success: false,
+          data: { versions: [] },
+        };
       }
 
       const user = await User.findByIdAndUpdate(
@@ -120,7 +147,11 @@ export const userRouter = createTRPCRouter({
       );
 
       if (!user) {
-        return { message: "User not saved yet", success: false };
+        return {
+          message: "User not saved yet",
+          success: false,
+          data: { versions: [] },
+        };
       }
 
       const versions = user.versions;

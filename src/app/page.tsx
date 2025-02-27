@@ -14,6 +14,7 @@ import { OverworkChart } from "./(charts)/overwork-chart";
 import { DistractionsChart } from "./(charts)/distractions-chart";
 import { ProductivityChart } from "@/app/(charts)/productivity-chart";
 import { useVersionStore } from "@/store/version-store";
+import { api } from "@/trpc/react";
 
 export default function Dashboard() {
   const { localUser: user } = useGetUser();
@@ -31,12 +32,13 @@ export default function Dashboard() {
 
         if (!userID) return;
 
-        // const { data } = await axios.get(`/api/is-form-submitted?id=${userID}`);
-        // if (data.success) {
-        //   if (data.isFormSubmitted) {
-        //     setIsFormSubmitted(true);
-        //   }
-        // }
+        const { data } = api.form.isFormSubmitted.useQuery(userID);
+
+        if (data?.success) {
+          if (data.data.isFormSubmitted) {
+            setIsFormSubmitted(true);
+          }
+        }
       } catch (error) {
         console.error(error);
       } finally {

@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Loader } from "@/components/loading";
 import { todosChartConfig } from "@/lib/chart-configs";
+import { api } from "@/trpc/react";
 
 type TodoData = {
   createdAt?: string;
@@ -65,35 +66,36 @@ export function TodosChart({
     void (async () => {
       try {
         setLoading(true);
-        // const { data } = await axios.get(
-        //   `/api/get-todos-data?id=${userId}&version=${selectedVersion}`,
-        // );
-        // if (data.success) {
-        //   const formattedData = data.data.todos.map((item: TodoData) => ({
-        //     createdAt: item.createdAt,
-        //     tasksPlanned: item.tasksPlanned,
-        //     tasksCompleted: item.tasksCompleted,
-        //   }));
+        const { data } = await api.charts.getTodosData.useQuery({
+          id: userId,
+          version: selectedVersion,
+        });
+        if (data?.success) {
+          const formattedData = data.data.todos.map((item: TodoData) => ({
+            createdAt: item.createdAt,
+            tasksPlanned: item.tasksPlanned,
+            tasksCompleted: item.tasksCompleted,
+          }));
 
-        //   const filteredData = filterDataByTimeRange(formattedData, timeRange);
+          const filteredData = filterDataByTimeRange(formattedData, timeRange);
 
-        //   const transformedData: ChartData[] = filteredData.map(
-        //     (item: {
-        //       createdAt?: string;
-        //       tasksPlanned: number;
-        //       tasksCompleted: number;
-        //     }) => ({
-        //       date: new Intl.DateTimeFormat("en-US", {
-        //         month: "short",
-        //         day: "2-digit",
-        //       }).format(new Date(item.createdAt!)),
-        //       tasksPlanned: item.tasksPlanned,
-        //       tasksCompleted: item.tasksCompleted,
-        //     }),
-        //   );
+          const transformedData: ChartData[] = filteredData.map(
+            (item: {
+              createdAt?: string;
+              tasksPlanned: number;
+              tasksCompleted: number;
+            }) => ({
+              date: new Intl.DateTimeFormat("en-US", {
+                month: "short",
+                day: "2-digit",
+              }).format(new Date(item.createdAt!)),
+              tasksPlanned: item.tasksPlanned,
+              tasksCompleted: item.tasksCompleted,
+            }),
+          );
 
-        //   setChartData(transformedData);
-        // }
+          setChartData(transformedData);
+        }
       } catch (error) {
         console.error("Error fetching todos data:", error);
       } finally {

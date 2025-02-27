@@ -23,6 +23,7 @@ import {
   type OnboardingFormData,
   OnBoardingFormSchema as OnboardingFormSchema,
 } from "@/lib/schema";
+import { api } from "@/trpc/react";
 
 export function OnboardingForm() {
   const [totalSlotHours, setTotalSlotHours] = useState(0);
@@ -75,20 +76,21 @@ export function OnboardingForm() {
   async function handleFinalSubmit() {
     try {
       setBtnLoading(true);
-      // const { data } = await axios.post("/api/onboard-user", {
-      //   email: user?.email,
-      //   id: user?.id,
-      //   picture: user?.picture as string,
-      //   given_name: user?.given_name,
-      //   isOnBoarded: true,
-      //   slots: formData?.slots,
-      //   desiredSleepHours: formData?.desiredSleepHours,
-      //   version: formData?.version,
-      // });
+      const { mutate, data } = api.user.onboardUser.useMutation();
+      mutate({
+        email: String(user?.email),
+        id: String(user?.id),
+        picture: user?.picture as string,
+        given_name: String(user?.given_name),
+        isOnBoarded: true,
+        slots: formData?.slots!,
+        desiredSleepHours: Number(formData?.desiredSleepHours),
+        version: String(formData?.version),
+      });
 
-      // if (data.success) {
-      //   router.push("/");
-      // }
+      if (data?.success) {
+        router.push("/");
+      }
       setBtnLoading(false);
     } catch (error) {
       console.error(error);
