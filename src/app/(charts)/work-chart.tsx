@@ -38,14 +38,15 @@ export function WorkChart({
   >([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const { data } = api.charts.getWorkData.useQuery({
+    id: userId,
+    version: selectedVersion,
+  });
+
   useEffect(() => {
     void (async () => {
       try {
         setIsLoading(true);
-        const { data } = api.charts.getWorkData.useQuery({
-          id: userId,
-          version: selectedVersion,
-        });
 
         if (data?.success && data.data.desiredWorkingHours) {
           const desiredHours = data.data.desiredWorkingHours[0]!;

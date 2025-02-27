@@ -26,22 +26,23 @@ export function ProductivityChart({
   selectedVersion: string;
 }) {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<
+  const [chartData, setChartData] = useState<
     Array<{
       date: string;
     }>
   >([]);
 
+  const { data } = api.charts.getProductivityData.useQuery({
+    id: userId,
+    version: selectedVersion,
+  });
+
   useEffect(() => {
     void (async () => {
       try {
         setLoading(true);
-        const { data } = api.charts.getProductivityData.useQuery({
-          id: userId,
-          version: selectedVersion,
-        });
         if (data?.success) {
-          setData(
+          setChartData(
             data.data.productivityData
               .map((item: { date: string }) => ({
                 ...item,
@@ -78,7 +79,7 @@ export function ProductivityChart({
           >
             <BarChart
               accessibilityLayer
-              data={data}
+              data={chartData}
               margin={{
                 left: 12,
                 right: 12,

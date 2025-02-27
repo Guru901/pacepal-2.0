@@ -217,7 +217,7 @@ export const chartsRouter = createTRPCRouter({
 
       return {
         success: true,
-        data: { forms, desiredSleepHours: singleDesiredSleepingHours },
+        data: { forms: forms, desiredSleepHours: singleDesiredSleepingHours },
       };
     }),
 

@@ -19,14 +19,15 @@ export function Penalty({
   const [penalty, setPenalty] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  const { data } = api.charts.getPenaltyData.useQuery({
+    id: userId,
+    version: selectedVersion,
+  });
+
   useEffect(() => {
     void (async () => {
       try {
         setLoading(true);
-        const { data } = api.charts.getPenaltyData.useQuery({
-          id: userId,
-          version: selectedVersion,
-        });
         if (data) {
           setPenalty(data.data.penalty);
         }
@@ -37,7 +38,7 @@ export function Penalty({
         setLoading(false);
       }
     })();
-  }, [userId, selectedVersion]);
+  }, [userId, selectedVersion, data]);
 
   return (
     <Card className="w-1/2">

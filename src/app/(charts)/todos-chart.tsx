@@ -39,6 +39,10 @@ export function TodosChart({
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [timeRange, setTimeRange] = useState("30d");
   const [loading, setLoading] = useState(true);
+  const { data } = api.charts.getTodosData.useQuery({
+    id: userId,
+    version: selectedVersion,
+  });
 
   const filterDataByTimeRange = (
     data: TodoData[],
@@ -66,10 +70,6 @@ export function TodosChart({
     void (async () => {
       try {
         setLoading(true);
-        const { data } = await api.charts.getTodosData.useQuery({
-          id: userId,
-          version: selectedVersion,
-        });
         if (data?.success) {
           const formattedData = data.data.todos.map((item: TodoData) => ({
             createdAt: item.createdAt,

@@ -33,15 +33,15 @@ export function MoodChart({
   ]);
 
   const [loading, setLoading] = useState(true);
+  const { data } = api.charts.getMoodData.useQuery({
+    id: userId,
+    version: selectedVersion,
+  });
 
   useEffect(() => {
     void (async () => {
       try {
         setLoading(true);
-        const { data } = api.charts.getMoodData.useQuery({
-          id: userId,
-          version: selectedVersion,
-        });
 
         if (data?.success) {
           const moodCounts = {
@@ -74,7 +74,7 @@ export function MoodChart({
         setLoading(false);
       }
     })();
-  }, [userId, selectedVersion]);
+  }, [userId, selectedVersion, data?.success, data?.data.forms]);
 
   return (
     <Card className="flex w-[50vw] flex-col">

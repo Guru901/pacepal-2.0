@@ -33,6 +33,10 @@ export function SleepChart({
   userId: string;
   selectedVersion: string;
 }) {
+  const { data } = api.charts.getSleepData.useQuery({
+    id: userId,
+    version: selectedVersion,
+  });
   const [chartData, setChartData] = useState([
     {
       date: "",
@@ -65,12 +69,9 @@ export function SleepChart({
     void (async () => {
       try {
         setLoading(true);
-        const { data } = api.charts.getSleepData.useQuery({
-          id: userId,
-          version: selectedVersion,
-        });
-        if (data?.success) {
+        if (data?.success && Array.isArray(data.data.forms)) {
           const filteredData = filterDataByTimeRange(
+            // @ts-ignore
             data.data.forms,
             timeRange,
           );
@@ -79,7 +80,7 @@ export function SleepChart({
             (item: { createdAt: string; hoursSlept: number }) => ({
               date: new Date(item.createdAt).toLocaleDateString("en-US"),
               actual_sleeping_hrs: item.hoursSlept,
-              desired_sleep_hrs: data.data.desiredSleepHours[0] ?? 0,
+              desired_sleep_hrs: data.data.desiredSleepHours?.[0] ?? 0,
             }),
           );
 
@@ -91,7 +92,14 @@ export function SleepChart({
         setLoading(false);
       }
     })();
-  }, [userId, timeRange, selectedVersion]);
+  }, [
+    userId,
+    timeRange,
+    selectedVersion,
+    data?.success,
+    data?.data.forms,
+    data?.data.desiredSleepHours,
+  ]);
 
   return (
     <Card>

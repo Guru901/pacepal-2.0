@@ -19,15 +19,16 @@ export function OverworkChart({
 }) {
   const [loading, setLoading] = useState(true);
   const [overWork, setOverWork] = useState(0);
+  const { data } = api.charts.getOverworkData.useQuery({
+    id: userId,
+    version: selectedVersion,
+  });
 
   useEffect(() => {
     void (async () => {
       try {
         setLoading(true);
-        const { data } = api.charts.getOverworkData.useQuery({
-          id: userId,
-          version: selectedVersion,
-        });
+
         if (data) {
           setOverWork(data.data.overWork);
         }
@@ -38,7 +39,7 @@ export function OverworkChart({
         setLoading(false);
       }
     })();
-  }, [selectedVersion, userId]);
+  }, [selectedVersion, userId, data, data?.data.overWork]);
 
   return (
     <Card className="w-1/2">

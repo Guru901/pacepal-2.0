@@ -36,15 +36,16 @@ export function DistractionsChart({
   const [loading, setLoading] = useState(true);
   const [distractions, setDistractions] = useState<Record<string, number>>({});
 
+  const { data } = api.charts.getDistractionsData.useQuery({
+    id: userId,
+    version: selectedVersion,
+  });
+
   useEffect(() => {
     void (async () => {
       try {
         setLoading(true);
 
-        const { data } = api.charts.getDistractionsData.useQuery({
-          id: userId,
-          version: selectedVersion,
-        });
         if (data?.success) {
           const distractionCounts = data.data.distractions.reduce(
             (acc: Record<string, number>, distraction: string) => {
@@ -61,7 +62,7 @@ export function DistractionsChart({
         setLoading(false);
       }
     })();
-  }, [userId, selectedVersion]);
+  }, [userId, selectedVersion, data?.success, data?.data.distractions]);
 
   const dynamicColors = generateColors(Object.keys(distractions).length);
 
