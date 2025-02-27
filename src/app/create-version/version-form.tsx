@@ -12,7 +12,7 @@ import useGetUser from "@/hooks/use-get-user";
 import { useRouter } from "next/navigation";
 import { useVersionStore } from "@/store/version-store";
 import { useUserStore } from "@/store/user-store";
-import { ScheduleSchema, ScheduleFormData } from "@/lib/schema";
+import { ScheduleSchema, type ScheduleFormData } from "@/lib/schema";
 import { api } from "@/trpc/react";
 
 export default function VersionForm() {
@@ -56,7 +56,7 @@ export default function VersionForm() {
   const onSubmit = async (formData: ScheduleFormData) => {
     setIsSubmitting(true);
     if (!formData.userId) {
-      setValue("userId", localUser?.mongoId as string);
+      setValue("userId", localUser?.mongoId);
     }
     try {
       const { mutate, data } = api.version.add.useMutation({});
@@ -69,12 +69,12 @@ export default function VersionForm() {
       if (data?.success) {
         setSelectedVersion(formData.versionName);
         setUser({
-          email: localUser?.email as string,
-          id: localUser?.mongoId as string,
+          email: localUser?.email,
+          id: localUser?.mongoId,
           picture: localUser?.picture,
-          given_name: localUser?.given_name as string,
+          given_name: localUser?.given_name,
           isOnBoarded: true,
-          mongoId: localUser?.mongoId as string,
+          mongoId: localUser?.mongoId,
           versions: data.data.versions,
         });
         router.push("/");

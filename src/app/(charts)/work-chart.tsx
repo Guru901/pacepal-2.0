@@ -89,7 +89,14 @@ export function WorkChart({
         setIsLoading(false);
       }
     })();
-  }, [userId, selectedVersion, setIsLoading]);
+  }, [
+    userId,
+    selectedVersion,
+    setIsLoading,
+    data?.success,
+    data?.data.desiredWorkingHours,
+    data?.data.forms,
+  ]);
 
   return (
     <Card>

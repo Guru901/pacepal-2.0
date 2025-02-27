@@ -2,7 +2,6 @@
 
 import { useUserStore } from "@/store/user-store";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
-import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function useGetUser() {

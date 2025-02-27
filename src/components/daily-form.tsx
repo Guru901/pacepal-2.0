@@ -152,6 +152,7 @@ export function DailyForm() {
                     <SelectValue placeholder="Select a rating" />
                   </SelectTrigger>
                   <SelectContent>
+                    {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
                     {[...Array(10)].map((_, i) => (
                       <SelectItem key={i} value={`${i + 1}`}>
                         {i + 1}

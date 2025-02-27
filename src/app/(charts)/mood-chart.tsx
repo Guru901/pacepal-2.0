@@ -63,7 +63,8 @@ export function MoodChart({
           setChartData((prevData) =>
             prevData.map((item) => ({
               ...item,
-              // @ts-expect-error - TypeScript doesn't recognize the `hasOwnProperty` method
+              // @ts-expect-error FIXME
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               freq: moodCounts[item.mood],
             })),
           );

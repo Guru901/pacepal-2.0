@@ -102,7 +102,7 @@ export function TodosChart({
         setLoading(false);
       }
     })();
-  }, [userId, timeRange, selectedVersion]);
+  }, [userId, timeRange, selectedVersion, data?.success, data?.data.todos]);
 
   if (loading) return <Loader />;
 

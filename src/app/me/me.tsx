@@ -46,12 +46,12 @@ export default function Me() {
         setIsEditingSleep(false);
         setUser({
           versions: data.data.versions,
-          email: localUser?.email as string,
-          id: localUser?.mongoId as string,
-          picture: localUser?.picture as string,
-          given_name: localUser?.given_name as string,
+          email: localUser?.email,
+          id: localUser?.mongoId,
+          picture: localUser?.picture,
+          given_name: localUser?.given_name,
           isOnBoarded: true,
-          mongoId: localUser?.mongoId as string,
+          mongoId: localUser?.mongoId,
         });
         setIsEditingSleep(false);
       }
@@ -86,12 +86,12 @@ export default function Me() {
       if (data?.success) {
         setUser({
           versions: data.data.versions,
-          email: localUser?.email as string,
-          id: localUser?.mongoId as string,
-          picture: localUser?.picture as string,
-          given_name: localUser?.given_name as string,
+          email: localUser?.email,
+          id: localUser?.mongoId,
+          picture: localUser?.picture,
+          given_name: localUser?.given_name,
           isOnBoarded: true,
-          mongoId: localUser?.mongoId as string,
+          mongoId: localUser?.mongoId,
         });
         setIsEditingSlots(false);
         return;

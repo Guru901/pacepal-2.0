@@ -1,5 +1,4 @@
 import { createTRPCRouter, dbProcedure } from "@/server/api/trpc";
-import { z } from "zod";
 import { User } from "@/server/database/models/user-model";
 import {
   OnBoardUserSchema,

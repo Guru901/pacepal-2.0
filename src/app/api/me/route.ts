@@ -1,6 +1,6 @@
 import { connectToDB } from "@/server/database/connectToDb";
 import { User } from "@/server/database/models/user-model";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   await connectToDB();

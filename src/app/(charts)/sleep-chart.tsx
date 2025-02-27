@@ -71,7 +71,7 @@ export function SleepChart({
         setLoading(true);
         if (data?.success && Array.isArray(data.data.forms)) {
           const filteredData = filterDataByTimeRange(
-            // @ts-ignore
+            // @ts-expect-error FIXME
             data.data.forms,
             timeRange,
           );
