@@ -24,7 +24,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
 import { useVersionStore } from "@/store/version-store";
 import useGetUser from "@/hooks/use-get-user";
-import { DailyFormData, dailyFormSchema } from "@/lib/schema";
+import { DailyFormData, DailyFormSchema } from "@/lib/schema";
 
 export function DailyForm() {
   const { localUser: user } = useGetUser();
@@ -38,7 +38,7 @@ export function DailyForm() {
     formState: { errors },
     setValue,
   } = useForm<DailyFormData>({
-    resolver: zodResolver(dailyFormSchema),
+    resolver: zodResolver(DailyFormSchema),
     defaultValues: {
       followedSchedule: "yes",
       productivity: "",

@@ -21,7 +21,7 @@ import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
 import useGetUser from "@/hooks/use-get-user";
 import {
   type OnboardingFormData,
-  onboardingFormSchema as OnboardingFormSchema,
+  OnBoardingFormSchema as OnboardingFormSchema,
 } from "@/lib/schema";
 
 export function OnboardingForm() {

@@ -12,7 +12,7 @@ import useGetUser from "@/hooks/use-get-user";
 import { useRouter } from "next/navigation";
 import { useVersionStore } from "@/store/version-store";
 import { useUserStore } from "@/store/user-store";
-import { scheduleSchema, ScheduleFormData } from "@/lib/schema";
+import { ScheduleSchema, ScheduleFormData } from "@/lib/schema";
 
 export default function VersionForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,7 +32,7 @@ export default function VersionForm() {
     watch,
     formState: { errors },
   } = useForm<ScheduleFormData>({
-    resolver: zodResolver(scheduleSchema),
+    resolver: zodResolver(ScheduleSchema),
     defaultValues: {
       versionName: "",
       desiredSleepHours: 8,

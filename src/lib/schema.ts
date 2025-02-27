@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export const slotSchema = z.object({
+export const SlotSchema = z.object({
   name: z.string().min(1, "Slot name is required"),
   hours: z
     .number()
@@ -8,18 +8,18 @@ export const slotSchema = z.object({
     .max(24, "Hours cannot exceed 24"),
 });
 
-export const onboardingFormSchema = z.object({
+export const OnBoardingFormSchema = z.object({
   desiredSleepHours: z
     .number()
     .min(0, "Sleep hours must be 0 or greater")
     .max(24, "Sleep hours cannot exceed 24"),
-  slots: z.array(slotSchema),
+  slots: z.array(SlotSchema),
   version: z.string(),
 });
 
-export type OnboardingFormData = z.infer<typeof onboardingFormSchema>;
+export type OnboardingFormData = z.infer<typeof OnBoardingFormSchema>;
 
-export const studySlotSchema = z.object({
+export const StudySlotSchema = z.object({
   name: z.string().min(1, "Slot name is required"),
   hours: z
     .number()
@@ -27,7 +27,7 @@ export const studySlotSchema = z.object({
     .max(24, "Study time cannot exceed 24 hours"),
 });
 
-export const scheduleSchema = z.object({
+export const ScheduleSchema = z.object({
   versionName: z
     .string()
     .min(1, "Version name is required")
@@ -37,14 +37,14 @@ export const scheduleSchema = z.object({
     .min(4, "Sleep hours must be at least 4")
     .max(12, "Sleep hours cannot exceed 12"),
   studySlots: z
-    .array(studySlotSchema)
+    .array(StudySlotSchema)
     .min(1, "At least one study slot is required"),
   userId: z.string().min(1, "User ID is required"),
 });
 
-export type ScheduleFormData = z.infer<typeof scheduleSchema>;
+export type ScheduleFormData = z.infer<typeof ScheduleSchema>;
 
-export const dailyFormSchema = z.object({
+export const DailyFormSchema = z.object({
   followedSchedule: z.enum(["yes", "no"]),
   productivity: z.string().min(1, "Please select a productivity rating"),
   tasksCompleted: z
@@ -63,4 +63,4 @@ export const dailyFormSchema = z.object({
   overWork: z.number().min(0),
 });
 
-export type DailyFormData = z.infer<typeof dailyFormSchema>;
+export type DailyFormData = z.infer<typeof DailyFormSchema>;
