@@ -1,7 +1,6 @@
 "use client";
 
 import { useUserStore } from "@/store/user-store";
-import { api } from "@/trpc/server";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
 import { useState, useEffect } from "react";
 
@@ -22,14 +21,13 @@ export default function useGetUser() {
         setError("not logged in");
       }
       const fetchUser = async () => {
-        const userId = localUser?.id || user?.id;
+        // const userId = localUser?.id || user?.id;
 
         try {
-          const data = await api.user.me(userId!);
-          if (data.success === false) {
-            setError("User not logged in");
-            return;
-          }
+          // const data = await api.user.me(userId!);
+          // if (data.success === false) { setError("User not logged in");
+          //   return;
+          // }
           // setUser({
           // email: data.user.email,
           // id: data.user.kindeId,
@@ -45,7 +43,7 @@ export default function useGetUser() {
         }
       };
 
-      fetchUser();
+      void fetchUser();
     }
   }, [setUser, isLoading, getUser, localUser, isAuthenticated]);
 
