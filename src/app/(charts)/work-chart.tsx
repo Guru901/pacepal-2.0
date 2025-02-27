@@ -14,7 +14,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import axios from "axios";
 import { Loader } from "@/components/loading";
 import { workChartConfig } from "@/lib/chart-configs";
 
@@ -27,61 +26,59 @@ export function WorkChart({
 }) {
   const [desiredWorkHrs, setDesiredWorkHrs] = useState([]);
   const [chartData, setChartData] = useState([]);
-  const [loading, setisLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchWorkData = async () => {
+    void (async () => {
       try {
-        setisLoading(true);
-        const { data } = await axios.get(
-          `/api/get-work-data?id=${userId}&version=${selectedVersion}`,
-        );
+        setIsLoading(true);
+        // const { data } = await axios.get(
+        //   `/api/get-work-data?id=${userId}&version=${selectedVersion}`,
+        // );
 
-        if (data.success) {
-          const desiredHours = data.data.desiredWorkingHours[0];
-          setDesiredWorkHrs(desiredHours);
+        // if (data.success) {
+        //   const desiredHours = data.data.desiredWorkingHours[0];
+        //   setDesiredWorkHrs(desiredHours);
 
-          const combinedChartData = data.data.forms?.map(
-            (form: {
-              hoursPlanned: number;
-              hoursWorked: { name: string; hours: number }[];
-              createdAt: string;
-            }) => {
-              const date = new Date(form.createdAt).toLocaleDateString("en-US");
-              const dataForDate = { date };
+        //   const combinedChartData = data.data.forms?.map(
+        //     (form: {
+        //       hoursPlanned: number;
+        //       hoursWorked: { name: string; hours: number }[];
+        //       createdAt: string;
+        //     }) => {
+        //       const date = new Date(form.createdAt).toLocaleDateString("en-US");
+        //       const dataForDate = { date };
 
-              form.hoursWorked.forEach((entry) => {
-                const periodName = entry.name;
+        //       form.hoursWorked.forEach((entry) => {
+        //         const periodName = entry.name;
 
-                const desiredPeriod = desiredHours.find(
-                  // @ts-expect-error FIXME
-                  (d) => d.name.toLowerCase() === periodName.toLowerCase(),
-                );
+        //         const desiredPeriod = desiredHours.find(
+        //           // @ts-expect-error FIXME
+        //           (d) => d.name.toLowerCase() === periodName.toLowerCase(),
+        //         );
 
-                if (desiredPeriod) {
-                  // @ts-expect-error FIXME
-                  dataForDate[periodName] = {
-                    actual_working_hrs: entry.hours,
-                    desired_working_hrs: desiredPeriod.hours,
-                  };
-                }
-              });
+        //         if (desiredPeriod) {
+        //           // @ts-expect-error FIXME
+        //           dataForDate[periodName] = {
+        //             actual_working_hrs: entry.hours,
+        //             desired_working_hrs: desiredPeriod.hours,
+        //           };
+        //         }
+        //       });
 
-              return dataForDate;
-            },
-          );
+        //       return dataForDate;
+        //     },
+        // );
 
-          setChartData(combinedChartData);
-        }
+        //   setChartData(combinedChartData);
+        // }
       } catch (error) {
         console.error("Error fetching work data:", error);
       } finally {
-        setisLoading(false);
+        setIsLoading(false);
       }
-    };
-
-    fetchWorkData();
-  }, [userId, selectedVersion, setisLoading]);
+    })();
+  }, [userId, selectedVersion, setIsLoading]);
 
   return (
     <Card>
@@ -89,7 +86,7 @@ export function WorkChart({
         <CardTitle>Work Hours Charts</CardTitle>
       </CardHeader>
       <CardContent>
-        {loading ? (
+        {isLoading ? (
           <Loader />
         ) : (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -155,7 +152,7 @@ export function WorkChart({
                           axisLine={false}
                           tickMargin={8}
                           minTickGap={32}
-                          tickFormatter={(value) => {
+                          tickFormatter={(value: string) => {
                             const date = new Date(value);
                             return date.toLocaleDateString("en-US", {
                               month: "short",
@@ -167,7 +164,7 @@ export function WorkChart({
                           cursor={false}
                           content={
                             <ChartTooltipContent
-                              labelFormatter={(value) => {
+                              labelFormatter={(value: string) => {
                                 return new Date(value).toLocaleDateString(
                                   "en-US",
                                   {
@@ -181,9 +178,12 @@ export function WorkChart({
                           }
                         />
                         <Area
-                          dataKey={(entry) =>
-                            entry[item.name]?.actual_working_hrs
-                          }
+                          dataKey={(
+                            entry: Record<
+                              string,
+                              { actual_working_hrs: number }
+                            >,
+                          ) => entry[item.name]?.actual_working_hrs}
                           name="Actual Working Hours"
                           type="natural"
                           fill="url(#fillActualWorkingHrs)"
@@ -191,9 +191,12 @@ export function WorkChart({
                           stackId="a"
                         />
                         <Area
-                          dataKey={(entry) =>
-                            entry[item.name]?.desired_working_hrs
-                          }
+                          dataKey={(
+                            entry: Record<
+                              string,
+                              { desired_working_hrs: number }
+                            >,
+                          ) => entry[item.name]?.desired_working_hrs}
                           name="Desired Working Hours"
                           type="natural"
                           fill="url(#fillDesiredWorkingHrs)"

@@ -22,7 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import axios from "axios";
 import { Loader } from "@/components/loading";
 import { sleepChartConfig } from "@/lib/chart-configs";
 
@@ -43,8 +42,7 @@ export function SleepChart({
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState("30d");
 
-  //@ts-expect-error FIXME
-  const filterDataByTimeRange = (data, range) => {
+  const filterDataByTimeRange = (data: [], range: string) => {
     const now = new Date();
     const startDate = new Date();
 
@@ -55,35 +53,35 @@ export function SleepChart({
     } else if (range === "90d") {
       startDate.setDate(now.getDate() - 90);
     }
-    // @ts-expect-error FIXME
-    return data.filter((item) => {
+
+    return data.filter((item: { createdAt: string }) => {
       const itemDate = new Date(item.createdAt);
       return itemDate >= startDate && itemDate <= now;
     });
   };
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get(
-          `/api/get-sleep-data?id=${userId}&version=${selectedVersion}`,
-        );
-        if (data.success) {
-          const filteredData = filterDataByTimeRange(
-            data.data.forms,
-            timeRange,
-          );
+        // const { data } = await axios.get(
+        //   `/api/get-sleep-data?id=${userId}&version=${selectedVersion}`,
+        // );
+        // if (data.success) {
+        //   const filteredData = filterDataByTimeRange(
+        //     data.data.forms,
+        //     timeRange,
+        //   );
 
-          // @ts-expect-error FIXME
-          const transformedData = filteredData.map((item) => ({
-            date: new Date(item.createdAt).toLocaleDateString("en-US"),
-            actual_sleeping_hrs: item.hoursSlept,
-            desired_sleep_hrs: data.data.desiredSleepHours[0],
-          }));
+        //   // @ts-expect-error FIXME
+        //   const transformedData = filteredData.map((item) => ({
+        //     date: new Date(item.createdAt).toLocaleDateString("en-US"),
+        //     actual_sleeping_hrs: item.hoursSlept,
+        //     desired_sleep_hrs: data.data.desiredSleepHours[0],
+        //   }));
 
-          setChartData(transformedData);
-        }
+        //   setChartData(transformedData);
+        // }
       } catch (error) {
         console.error("Error fetching sleep data:", error);
       } finally {
@@ -175,7 +173,7 @@ export function SleepChart({
                 axisLine={false}
                 tickMargin={8}
                 minTickGap={32}
-                tickFormatter={(value) => {
+                tickFormatter={(value: string) => {
                   const date = new Date(value);
                   return date.toLocaleDateString("en-US", {
                     month: "short",
@@ -187,7 +185,7 @@ export function SleepChart({
                 cursor={false}
                 content={
                   <ChartTooltipContent
-                    labelFormatter={(value) => {
+                    labelFormatter={(value: string) => {
                       return new Date(value).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",

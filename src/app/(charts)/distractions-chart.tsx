@@ -33,27 +33,25 @@ export function DistractionsChart({
   selectedVersion: string;
 }) {
   const [loading, setLoading] = useState(true);
-  const [distractions, setDistractions] = useState<{ [key: string]: number }>(
-    {},
-  );
+  const [distractions, setDistractions] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get(
-          `/api/get-distractions-data?id=${userId}&version=${selectedVersion}`,
-        );
-        if (data.success) {
-          const distractionCounts = data.data.distractions.reduce(
-            (acc: { [key: string]: number }, distraction: string) => {
-              acc[distraction] = (acc[distraction] || 0) + 1;
-              return acc;
-            },
-            {},
-          );
-          setDistractions(distractionCounts);
-        }
+        // const { data } = await axios.get(
+        //   `/api/get-distractions-data?id=${userId}&version=${selectedVersion}`,
+        // );
+        // if (data.success) {
+        //   const distractionCounts = data.data.distractions.reduce(
+        //     (acc: { [key: string]: number }, distraction: string) => {
+        //       acc[distraction] = (acc[distraction] || 0) + 1;
+        //       return acc;
+        //     },
+        //     {},
+        //   );
+        //   setDistractions(distractionCounts);
+        // }
       } catch (error) {
         console.error("Error fetching distractions data:", error);
       } finally {

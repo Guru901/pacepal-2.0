@@ -14,7 +14,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Loader } from "@/components/loading";
 import { productivityChartConfig } from "@/lib/chart-configs";
 
@@ -29,22 +28,22 @@ export function ProductivityChart({
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get(
-          `/api/get-productivity-data?id=${userId}&version=${selectedVersion}`,
-        );
-        if (data.success) {
-          setData(
-            data.data.productivityData
-              .map((item: { date: string }) => ({
-                ...item,
-                date: item.date.split("/").reverse().join("-"),
-              }))
-              .reverse(),
-          );
-        }
+        // const { data } = await axios.get(
+        //   `/api/get-productivity-data?id=${userId}&version=${selectedVersion}`,
+        // );
+        // if (data.success) {
+        //   setData(
+        //     data.data.productivityData
+        //       .map((item: { date: string }) => ({
+        //         ...item,
+        //         date: item.date.split("/").reverse().join("-"),
+        //       }))
+        //       .reverse(),
+        //   );
+        // }
       } catch (error) {
         console.error("Error fetching productivity data:", error);
       } finally {
@@ -87,7 +86,7 @@ export function ProductivityChart({
                 tickMargin={8}
                 minTickGap={32}
                 interval={0}
-                tickFormatter={(value) => {
+                tickFormatter={(value: string) => {
                   const [year, month, day] = value.split("-");
                   return new Date(`${year}-${month}-${day}`).toLocaleDateString(
                     "en-US",
@@ -103,7 +102,7 @@ export function ProductivityChart({
                   <ChartTooltipContent
                     className="w-[150px]"
                     nameKey="views"
-                    labelFormatter={(value) => {
+                    labelFormatter={(value: string) => {
                       const [year, month, day] = value.split("-");
                       return new Date(
                         `${year}-${month}-${day}`,

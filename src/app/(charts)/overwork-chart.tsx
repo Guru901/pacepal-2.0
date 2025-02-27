@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import axios from "axios";
 import { useEffect, useState } from "react";
 
 export function OverworkChart({
@@ -21,14 +20,13 @@ export function OverworkChart({
   const [overWork, setOverWork] = useState(0);
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       try {
-        setLoading(true);
-        const { data } = await axios.get(
-          `/api/get-overwork-data?id=${userId}&version=${selectedVersion}`,
-        );
-
-        setOverWork(data.data.overWork);
+        // setLoading(true);
+        // const { data } = await axios.get(
+        //   `/api/get-overwork-data?id=${userId}&version=${selectedVersion}`,
+        // );
+        // setOverWork(data.data.overWork);
       } catch (error) {
         console.error(error);
         setOverWork(0);

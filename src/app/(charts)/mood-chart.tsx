@@ -13,7 +13,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Loader } from "@/components/loading";
 import { moodCharConfig as moodChartConfig } from "@/lib/chart-configs";
 
@@ -35,38 +34,38 @@ export function MoodChart({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get(
-          `/api/get-mood-data?id=${userId}&version=${selectedVersion}`,
-        );
+        // const { data } = await axios.get(
+        //   `/api/get-mood-data?id=${userId}&version=${selectedVersion}`,
+        // );
 
-        if (data.success) {
-          const moodCounts = {
-            happy: 0,
-            tired: 0,
-            neutral: 0,
-            stressed: 0,
-            productive: 0,
-          };
+        // if (data.success) {
+        //   const moodCounts = {
+        //     happy: 0,
+        //     tired: 0,
+        //     neutral: 0,
+        //     stressed: 0,
+        //     productive: 0,
+        //   };
 
-          data.data.forms.forEach((form: { mood: string }) => {
-            const mood = form.mood;
-            if (moodCounts.hasOwnProperty(mood)) {
-              // @ts-expect-error - TypeScript doesn't recognize the `hasOwnProperty` method
-              moodCounts[mood]++;
-            }
-          });
+        //   data.data.forms.forEach((form: { mood: string }) => {
+        //     const mood = form.mood;
+        //     if (moodCounts.hasOwnProperty(mood)) {
+        //       // @ts-expect-error - TypeScript doesn't recognize the `hasOwnProperty` method
+        //       moodCounts[mood]++;
+        //     }
+        //   });
 
-          setChartData((prevData) =>
-            prevData.map((item) => ({
-              ...item,
-              // @ts-expect-error - TypeScript doesn't recognize the `hasOwnProperty` method
-              freq: moodCounts[item.mood],
-            })),
-          );
-        }
+        //   setChartData((prevData) =>
+        //     prevData.map((item) => ({
+        //       ...item,
+        //       // @ts-expect-error - TypeScript doesn't recognize the `hasOwnProperty` method
+        //       freq: moodCounts[item.mood],
+        //     })),
+        //   );
+        // }
       } catch (error) {
         console.error("Error fetching mood data:", error);
       } finally {
