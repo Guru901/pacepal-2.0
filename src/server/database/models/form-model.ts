@@ -1,6 +1,30 @@
-import mongoose, { model, models, Schema } from "mongoose";
+import mongoose from "mongoose";
 
-const formSchema = new Schema(
+type Form = {
+  followedSchedule: boolean;
+  productivity: string;
+  hoursWorked: {
+    name: string;
+    hours: number;
+  }[];
+  hoursPlanned: number;
+  tasksCompleted: number;
+  tasksPlanned: number;
+  sleptWell: string;
+  distractions: string;
+  notes: string;
+  userId: string;
+  version: string;
+  distractionsList: string;
+  mood: string;
+  overWork: number;
+  hoursSlept: number;
+  createdBy: mongoose.Schema.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+const formSchema = new mongoose.Schema<Form>(
   {
     followedSchedule: {
       type: Boolean,
@@ -71,6 +95,8 @@ const formSchema = new Schema(
   { timestamps: true },
 );
 
-const Form = models.Form ?? model("Form", formSchema);
+const Form =
+  (mongoose.models.Form as mongoose.Model<Form>) ||
+  mongoose.model("Form", formSchema);
 
 export { Form };

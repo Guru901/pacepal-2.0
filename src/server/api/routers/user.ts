@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { z } from "zod";
 import { User } from "@/server/database/models/user-model";
@@ -48,7 +44,7 @@ export const userRouter = createTRPCRouter({
         return { message: "User already exists", success: false };
       }
 
-      const newUser = await User.create({
+      await User.create({
         email,
         kindeId: id,
         picture,
@@ -56,7 +52,7 @@ export const userRouter = createTRPCRouter({
         isOnBoarded,
         versions: [
           {
-            versionName: versionFromClient,
+            versionName: version,
             data: {
               slots,
               desiredSleepHours,

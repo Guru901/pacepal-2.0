@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { GetChartsDataSchema } from "@/lib/schema";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { Form } from "@/server/database/models/form-model";
@@ -45,6 +42,7 @@ export const chartsRouter = createTRPCRouter({
         data: { distractions: distractions },
       };
     }),
+
   getMoodData: publicProcedure
     .input(GetChartsDataSchema)
     .query(async ({ input }) => {
@@ -117,12 +115,14 @@ export const chartsRouter = createTRPCRouter({
         versionName,
       }).select("hoursSlept")) as [];
 
-      forms.forEach((form: { hoursSlept: number }) => {
-        if (form.hoursSlept > desiredSleepHours[0]) {
-          const penaltyHrs = form.hoursSlept - desiredSleepHours[0];
-          penalty += penaltyHrs * 100;
-        }
-      });
+      if (desiredSleepHours) {
+        forms.forEach((form: { hoursSlept: number }) => {
+          if (form.hoursSlept > Number(desiredSleepHours[0])) {
+            const penaltyHrs = form.hoursSlept - Number(desiredSleepHours[0]);
+            penalty += penaltyHrs * 100;
+          }
+        });
+      }
 
       return {
         success: true,
@@ -200,8 +200,12 @@ export const chartsRouter = createTRPCRouter({
           return hours !== null;
         });
 
-      const singleDesiredSleepingHours =
-        desiredSleepHours.length > 0 ? [desiredSleepHours[0]] : [];
+      let singleDesiredSleepingHours;
+
+      if (desiredSleepHours) {
+        singleDesiredSleepingHours =
+          desiredSleepHours.length > 0 ? [desiredSleepHours[0]] : [];
+      }
 
       if (!forms.length) {
         return {
@@ -263,12 +267,15 @@ export const chartsRouter = createTRPCRouter({
             return null;
           },
         )
-        .filter((slots: { name: string; hours: number }[]) => {
+        .filter((slots) => {
           return slots !== null;
         });
 
-      const singleDesiredWorkingHours =
-        desiredWorkingHours.length > 0 ? [desiredWorkingHours[0]] : [];
+      let singleDesiredWorkingHours;
+      if (desiredWorkingHours) {
+        singleDesiredWorkingHours =
+          desiredWorkingHours.length > 0 ? [desiredWorkingHours[0]] : [];
+      }
 
       if (!forms.length) {
         return {

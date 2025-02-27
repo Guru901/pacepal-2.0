@@ -1,9 +1,8 @@
 import { ScheduleSchema } from "@/lib/schema";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { User } from "@/server/database/models/user-model";
-import mongoose, { MongooseError } from "mongoose";
+import { MongooseError } from "mongoose";
 import { TRPCError } from "@trpc/server";
-// import { z } from "zod";
 
 export const versionRouter = createTRPCRouter({
   add: publicProcedure.input(ScheduleSchema).mutation(async ({ input }) => {
@@ -19,7 +18,7 @@ export const versionRouter = createTRPCRouter({
         });
       }
 
-      await user.versions.push({
+      user.versions.push({
         versionName,
         data: {
           slots: studySlots,

@@ -1,6 +1,24 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
+type User = {
+  email: string;
+  kindeId: string;
+  picture: string;
+  given_name: string;
+  isOnBoarded: boolean;
+  versions: {
+    versionName: string;
+    data: {
+      slots: {
+        name: string;
+        hours: number;
+      }[];
+      desiredSleepHours: number;
+    };
+  }[];
+};
+
+const userSchema = new mongoose.Schema<User>({
   email: {
     type: String,
     required: true,
@@ -24,5 +42,7 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
-const User = mongoose.models.User ?? mongoose.model("User", userSchema);
+const User =
+  (mongoose.models.User as mongoose.Model<User>) ||
+  mongoose.model("User", userSchema);
 export { User };
