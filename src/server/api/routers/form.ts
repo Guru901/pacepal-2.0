@@ -51,6 +51,7 @@ export const formRouter = createTRPCRouter({
         hoursSlept,
         version,
         overWork,
+        createdBy,
       } = input;
 
       const form = await Form.create({
@@ -68,6 +69,7 @@ export const formRouter = createTRPCRouter({
         hoursSlept,
         version,
         overWork,
+        createdBy,
       });
 
       return { message: "Form submitted", success: true, data: form };

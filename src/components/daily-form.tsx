@@ -24,14 +24,15 @@ import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
 import { useVersionStore } from "@/store/version-store";
 import useGetUser from "@/hooks/use-get-user";
-import { DailyFormData, DailyFormSchema } from "@/lib/schema";
+import { type DailyFormData, DailyFormSchema } from "@/lib/schema";
 import { api } from "@/trpc/react";
 
 export function DailyForm() {
   const { localUser: user } = useGetUser();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { selectedVersion } = useVersionStore();
+  const { mutate, data, isPending } = api.form.submitForm.useMutation();
+  const [error, setError] = useState("");
 
   const {
     control,
@@ -58,9 +59,8 @@ export function DailyForm() {
   });
 
   async function onSubmit(formData: DailyFormData) {
-    setIsSubmitting(true);
     if (!formData.userId) return;
-    setValue("userId", user?.mongoId as string);
+    setValue("userId", user?.mongoId);
 
     const hoursPlanned = user.versions
       .find((version) => version.versionName === selectedVersion)
@@ -69,7 +69,7 @@ export function DailyForm() {
       }, 0);
 
     try {
-      const { mutate, data } = api.form.submitForm.useMutation();
+      console.log(`ehe`);
       mutate({
         version: selectedVersion,
         userId: user?.mongoId,
@@ -86,15 +86,18 @@ export function DailyForm() {
         hoursPlanned: hoursPlanned ?? 0,
         hoursWorked: formData.hoursWorked,
         followedSchedule: formData.followedSchedule,
+        createdBy: user.mongoId,
       });
+      console.log(data);
       if (data?.success) {
         location.reload();
+      } else {
+        setError(String(data?.message));
       }
-      setIsSubmitting(false);
     } catch (error) {
+      setError(String(error));
       console.error(error);
       alert("Error submitting reflection. Please try again.");
-      setIsSubmitting(false);
     }
   }
 
@@ -381,13 +384,14 @@ export function DailyForm() {
           </div>
         </form>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex flex-col gap-2">
+        {error && <p className="text-red-500">{error}</p>}
         <Button
           className="w-full"
           onClick={handleSubmit(onSubmit)}
-          disabled={isSubmitting}
+          disabled={isPending}
         >
-          {isSubmitting ? "Submitting..." : "Submit Reflection"}
+          {isPending ? "Submitting..." : "Submit Reflection"}
         </Button>
       </CardFooter>
     </Card>

@@ -100,6 +100,7 @@ export const SubmitFormSchema = z.object({
   hoursPlanned: z.number().int().min(0, "Hours planned must be 0 or greater"),
   followedSchedule: z.enum(["yes", "no"]),
   version: z.string().min(1, "Version is required"),
+  createdBy: z.string().min(1, "Created by is required"),
 });
 
 export const UpdateSlotsSchema = z.object({

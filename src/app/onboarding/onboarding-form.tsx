@@ -35,6 +35,7 @@ export function OnboardingForm() {
   const router = useRouter();
 
   const { user, isLoading } = useKindeAuth();
+  const { mutate, data } = api.user.onboardUser.useMutation();
 
   const {
     control,
@@ -57,7 +58,6 @@ export function OnboardingForm() {
   });
 
   const { localUser } = useGetUser();
-
   const watchForm = watch();
 
   useEffect(() => {
@@ -76,14 +76,13 @@ export function OnboardingForm() {
   async function handleFinalSubmit() {
     try {
       setBtnLoading(true);
-      const { mutate, data } = api.user.onboardUser.useMutation();
       mutate({
         email: String(user?.email),
         id: String(user?.id),
-        picture: user?.picture as string,
+        picture: String(user?.picture),
         given_name: String(user?.given_name),
         isOnBoarded: true,
-        slots: formData?.slots!,
+        slots: formData?.slots ?? [],
         desiredSleepHours: Number(formData?.desiredSleepHours),
         version: String(formData?.version),
       });
@@ -119,7 +118,7 @@ export function OnboardingForm() {
   }
 
   return (
-    <>
+    <div className="space-y-4">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="version">Version</Label>
@@ -222,7 +221,7 @@ export function OnboardingForm() {
           <span>{totalSlotHours + (watchForm.desiredSleepHours || 0)}</span>
         </div>
       </form>
-      <CardFooter>
+      <CardFooter className="px-0">
         <Button className="w-full" onClick={handleSubmit(onSubmit)}>
           Review Plan
         </Button>
@@ -268,6 +267,6 @@ export function OnboardingForm() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 }

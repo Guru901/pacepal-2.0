@@ -8,44 +8,6 @@ import {
 } from "@/lib/schema";
 
 export const userRouter = createTRPCRouter({
-  me: dbProcedure.input(z.string()).query(async ({ input }) => {
-    const kindeId = input;
-
-    const user = await User.findOne({ kindeId });
-
-    if (!user) {
-      return {
-        message: "User not saved yet",
-        success: false,
-        user: {
-          email: "",
-          id: "",
-          picture: "",
-          given_name: "",
-          isOnBoarded: false,
-          mongoId: "",
-          versions: [],
-        },
-      };
-    }
-
-    return {
-      success: true,
-      message: "User Found",
-      user: {
-        email: user.email,
-        id: user.kindeId,
-        picture: user.picture,
-        given_name: user.given_name,
-        isOnBoarded: user.isOnBoarded,
-        mongoId: user._id,
-        versions: user.versions,
-        kindeId: user.kindeId,
-        _id: user._id,
-      },
-    };
-  }),
-
   onboardUser: dbProcedure
     .input(OnBoardUserSchema)
     .mutation(async ({ input }) => {

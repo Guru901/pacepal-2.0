@@ -1,8 +1,8 @@
 "use client";
 
 import { useUserStore } from "@/store/user-store";
-import { api } from "@/trpc/react";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function useGetUser() {
@@ -22,10 +22,32 @@ export default function useGetUser() {
         setError("not logged in");
       }
       const fetchUser = async () => {
-        const userId = localUser?.id ?? user?.id;
+        const userId = localUser?.id || user?.id;
 
         try {
-          const { data } = api.user.me.useQuery(userId);
+          const data = (await (
+            await fetch("/api/me?kindeId=" + userId)
+          ).json()) as {
+            success: boolean;
+            user: {
+              email: string;
+              kindeId: string;
+              picture: string;
+              given_name: string;
+              isOnBoarded: boolean;
+              _id: string;
+              versions: {
+                versionName: string;
+                data: {
+                  slots: {
+                    name: string;
+                    hours: number;
+                  }[];
+                  desiredSleepHours: number;
+                };
+              }[];
+            };
+          };
           if (data?.success === false) {
             setError("User not logged in");
             return;

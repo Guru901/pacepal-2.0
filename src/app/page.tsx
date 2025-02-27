@@ -24,16 +24,12 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const { setSelectedVersion } = useVersionStore();
 
+  const userID = user?.mongoId.replaceAll(" ", "_");
+  const { data } = api.form.isFormSubmitted.useQuery(userID);
+
   useEffect(() => {
     void (async () => {
       try {
-        const userID = user?.mongoId.replaceAll(" ", "_");
-        setLoading(true);
-
-        if (!userID) return;
-
-        const { data } = api.form.isFormSubmitted.useQuery(userID);
-
         if (data?.success) {
           if (data.data.isFormSubmitted) {
             setIsFormSubmitted(true);
@@ -45,7 +41,12 @@ export default function Dashboard() {
         setLoading(false);
       }
     })();
-  }, [user?.mongoId, isFormSubmitted]);
+  }, [
+    user.mongoId,
+    isFormSubmitted,
+    data?.success,
+    data?.data.isFormSubmitted,
+  ]);
 
   useEffect(() => {
     const selectedVersion = localStorage.getItem("selected-version");
