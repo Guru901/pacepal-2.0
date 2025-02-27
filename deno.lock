@@ -26,7 +26,8 @@
     "npm:superjson@^2.2.1": "2.2.2",
     "npm:tailwindcss@^3.4.3": "3.4.17_postcss@8.5.3",
     "npm:typescript@^5.5.3": "5.7.3",
-    "npm:zod@^3.23.3": "3.24.2"
+    "npm:zod@^3.23.3": "3.24.2",
+    "npm:zustand@^5.0.3": "5.0.3_@types+react@18.3.18_react@18.3.1"
   },
   "npm": {
     "@alloc/quick-lru@5.2.0": {
@@ -3547,6 +3548,13 @@
     },
     "zod@3.24.2": {
       "integrity": "sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ=="
+    },
+    "zustand@5.0.3_@types+react@18.3.18_react@18.3.1": {
+      "integrity": "sha512-14fwWQtU3pH4dE0dOpdMiWjddcH+QzKIgk1cl8epwSE7yag43k/AD/m4L6+K7DytAOr9gGBe3/EXj9g7cdostg==",
+      "dependencies": [
+        "@types/react",
+        "react"
+      ]
     }
   },
   "workspace": {
@@ -3577,7 +3585,8 @@
         "npm:superjson@^2.2.1",
         "npm:tailwindcss@^3.4.3",
         "npm:typescript@^5.5.3",
-        "npm:zod@^3.23.3"
+        "npm:zod@^3.23.3",
+        "npm:zustand@^5.0.3"
       ]
     }
   }
