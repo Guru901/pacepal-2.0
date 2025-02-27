@@ -68,9 +68,9 @@ const formSchema = new Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const Form = models.Form || model("Form", formSchema);
+const Form = models.Form ?? model("Form", formSchema);
 
 export { Form };
