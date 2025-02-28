@@ -101,7 +101,7 @@ export const chartsRouter = createTRPCRouter({
         const { id, version } = input;
         let totalOverWorkHours = 0;
 
-        const forms = (await Form.find({ version, createdBy: id })) as [];
+        const forms = await Form.find({ version, createdBy: id });
 
         forms.forEach((form: { overWork: number }) => {
           totalOverWorkHours += form.overWork;
@@ -152,19 +152,17 @@ export const chartsRouter = createTRPCRouter({
             return hours !== null;
           });
 
-        const forms = (await Form.find({
+        const forms = await Form.find({
           createdBy: id,
-          versionName,
-        }).select("hoursSlept")) as [];
+          version: versionName,
+        }).select("hoursSlept");
 
-        if (desiredSleepHours) {
-          forms.forEach((form: { hoursSlept: number }) => {
-            if (form.hoursSlept > Number(desiredSleepHours[0])) {
-              const penaltyHrs = form.hoursSlept - Number(desiredSleepHours[0]);
-              penalty += penaltyHrs * 100;
-            }
-          });
-        }
+        forms.forEach((form: { hoursSlept: number }) => {
+          if (form.hoursSlept > Number(desiredSleepHours?.[0])) {
+            const penaltyHrs = form.hoursSlept - Number(desiredSleepHours?.[0]);
+            penalty += penaltyHrs * 100;
+          }
+        });
 
         return {
           success: true,
