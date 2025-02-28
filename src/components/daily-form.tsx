@@ -69,7 +69,6 @@ export function DailyForm() {
       }, 0);
 
     try {
-      console.log(`ehe`);
       mutate({
         version: selectedVersion,
         userId: user?.mongoId,
@@ -88,7 +87,6 @@ export function DailyForm() {
         followedSchedule: formData.followedSchedule,
         createdBy: user.mongoId,
       });
-      console.log(data);
       if (data?.success) {
         location.reload();
       } else {
