@@ -6,6 +6,7 @@ import {
   UpdateSlotsSchema,
 } from "@/lib/schema";
 import { TRPCError } from "@trpc/server";
+import { MongooseError } from "mongoose";
 
 export const userRouter = createTRPCRouter({
   onboardUser: dbProcedure
@@ -51,7 +52,16 @@ export const userRouter = createTRPCRouter({
           success: true,
         };
       } catch (error) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", cause: error });
+        if (error instanceof MongooseError) {
+          throw new TRPCError({
+            message: "Database error",
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to add version",
+        });
       }
     }),
 
@@ -86,7 +96,16 @@ export const userRouter = createTRPCRouter({
 
         return { success: true, user, data: { versions } };
       } catch (error) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", cause: error });
+        if (error instanceof MongooseError) {
+          throw new TRPCError({
+            message: "Database error",
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to add version",
+        });
       }
     }),
 
@@ -129,7 +148,16 @@ export const userRouter = createTRPCRouter({
 
         return { success: true, user, data: { versions } };
       } catch (error) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", cause: error });
+        if (error instanceof MongooseError) {
+          throw new TRPCError({
+            message: "Database error",
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to add version",
+        });
       }
     }),
 });
