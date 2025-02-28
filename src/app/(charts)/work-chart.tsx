@@ -53,6 +53,7 @@ export function WorkChart({
           setDesiredWorkHrs(desiredHours);
 
           const combinedChartData = data.data.forms?.map(
+            // @ts-expect-error FIXME
             (form: {
               hoursPlanned: number;
               hoursWorked: { name: string; hours: number }[];

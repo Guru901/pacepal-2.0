@@ -313,7 +313,7 @@ export const chartsRouter = createTRPCRouter({
           return {
             message: "Forms not found",
             success: true,
-            data: { todos: [] },
+            data: {},
           };
         }
 

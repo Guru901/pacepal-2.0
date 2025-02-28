@@ -70,7 +70,8 @@ export function TodosChart({
     void (async () => {
       try {
         setLoading(true);
-        if (data?.success) {
+        if (data?.success && data.data.todos) {
+          // @ts-expect-error FIXME
           const formattedData = data.data.todos.map((item: TodoData) => ({
             createdAt: item.createdAt,
             tasksPlanned: item.tasksPlanned,
