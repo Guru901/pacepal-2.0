@@ -3,6 +3,7 @@ import { createTRPCRouter, dbProcedure } from "@/server/api/trpc";
 import { Form } from "@/server/database/models/form-model";
 import { User } from "@/server/database/models/user-model";
 import { TRPCError } from "@trpc/server";
+import { MongooseError } from "mongoose";
 
 export const chartsRouter = createTRPCRouter({
   getDistractionsData: dbProcedure
@@ -44,7 +45,16 @@ export const chartsRouter = createTRPCRouter({
           data: { distractions: distractions },
         };
       } catch (error) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", cause: error });
+        if (error instanceof MongooseError) {
+          throw new TRPCError({
+            message: "Database error",
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to add version",
+        });
       }
     }),
 
@@ -71,7 +81,16 @@ export const chartsRouter = createTRPCRouter({
           data: { forms },
         };
       } catch (error) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", cause: error });
+        if (error instanceof MongooseError) {
+          throw new TRPCError({
+            message: "Database error",
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to add version",
+        });
       }
     }),
 
@@ -95,7 +114,16 @@ export const chartsRouter = createTRPCRouter({
           },
         };
       } catch (error) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", cause: error });
+        if (error instanceof MongooseError) {
+          throw new TRPCError({
+            message: "Database error",
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to add version",
+        });
       }
     }),
 
@@ -143,7 +171,16 @@ export const chartsRouter = createTRPCRouter({
           data: { penalty },
         };
       } catch (error) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", cause: error });
+        if (error instanceof MongooseError) {
+          throw new TRPCError({
+            message: "Database error",
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to add version",
+        });
       }
     }),
 
@@ -190,7 +227,16 @@ export const chartsRouter = createTRPCRouter({
           data: { productivityData },
         };
       } catch (error) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", cause: error });
+        if (error instanceof MongooseError) {
+          throw new TRPCError({
+            message: "Database error",
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to add version",
+        });
       }
     }),
 
@@ -242,7 +288,16 @@ export const chartsRouter = createTRPCRouter({
           data: { forms: forms, desiredSleepHours: singleDesiredSleepingHours },
         };
       } catch (error) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", cause: error });
+        if (error instanceof MongooseError) {
+          throw new TRPCError({
+            message: "Database error",
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to add version",
+        });
       }
     }),
 
@@ -269,7 +324,16 @@ export const chartsRouter = createTRPCRouter({
           data: { todos },
         };
       } catch (error) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", cause: error });
+        if (error instanceof MongooseError) {
+          throw new TRPCError({
+            message: "Database error",
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to add version",
+        });
       }
     }),
 
@@ -320,7 +384,16 @@ export const chartsRouter = createTRPCRouter({
           data: { forms, desiredWorkingHours: singleDesiredWorkingHours },
         };
       } catch (error) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", cause: error });
+        if (error instanceof MongooseError) {
+          throw new TRPCError({
+            message: "Database error",
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to add version",
+        });
       }
     }),
 });
