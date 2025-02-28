@@ -3,6 +3,7 @@ import { createTRPCRouter, dbProcedure } from "../trpc";
 import { SubmitFormSchema } from "@/lib/schema";
 import { Form } from "@/server/database/models/form-model";
 import { TRPCError } from "@trpc/server";
+import { MongooseError } from "mongoose";
 
 export const formRouter = createTRPCRouter({
   isFormSubmitted: dbProcedure.input(z.string()).query(async ({ input }) => {
@@ -34,7 +35,16 @@ export const formRouter = createTRPCRouter({
         data: { isFormSubmitted: true },
       };
     } catch (error) {
-      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", cause: error });
+      if (error instanceof MongooseError) {
+        throw new TRPCError({
+          message: "Database error",
+          code: "INTERNAL_SERVER_ERROR",
+        });
+      }
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to add version",
+      });
     }
   }),
 
@@ -80,7 +90,16 @@ export const formRouter = createTRPCRouter({
 
         return { message: "Form submitted", success: true, data: form };
       } catch (error) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", cause: error });
+        if (error instanceof MongooseError) {
+          throw new TRPCError({
+            message: "Database error",
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to add version",
+        });
       }
     }),
 });
