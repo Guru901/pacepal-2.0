@@ -14,13 +14,13 @@ export const formRouter = createTRPCRouter({
       const endOfToday = new Date();
       endOfToday.setUTCHours(23, 59, 59, 999);
 
-      const form = (await Form.find({
+      const form = await Form.find({
         createdBy: input,
         createdAt: {
           $gte: startOfToday,
           $lte: endOfToday,
         },
-      })) as [];
+      });
 
       if (!form.length) {
         return {

@@ -15,10 +15,10 @@ export const chartsRouter = createTRPCRouter({
         const distractionsArray: string[] = [];
         const distractions: string[] = [];
 
-        const forms = (await Form.find({
+        const forms = await Form.find({
           createdBy: id,
           version,
-        }).select("distractionsList createdAt")) as [];
+        }).select("distractionsList createdAt");
 
         forms.forEach((form: { distractionsList: string }) => {
           form.distractionsList.split(",").forEach((distraction) => {
@@ -63,10 +63,10 @@ export const chartsRouter = createTRPCRouter({
     .query(async ({ input }) => {
       try {
         const { id, version } = input;
-        const forms = (await Form.find({
+        const forms = await Form.find({
           createdBy: id,
           version,
-        }).select("mood createdAt")) as [];
+        }).select("mood createdAt");
 
         if (!forms.length) {
           return {
@@ -193,7 +193,7 @@ export const chartsRouter = createTRPCRouter({
           productivity: string;
         }[] = [];
 
-        const forms = (await Form.find({
+        const forms = await Form.find({
           createdBy: id,
           version,
         })
@@ -201,7 +201,7 @@ export const chartsRouter = createTRPCRouter({
           .sort({
             createdAt: -1,
           })
-          .limit(30)) as [];
+          .limit(30);
 
         if (!forms.length) {
           return {
@@ -243,10 +243,10 @@ export const chartsRouter = createTRPCRouter({
     .query(async ({ input }) => {
       try {
         const { id, version: versionFromClient } = input;
-        const forms = (await Form.find({
+        const forms = await Form.find({
           createdBy: id,
           version: versionFromClient,
-        }).select("hoursSlept createdAt")) as [];
+        }).select("hoursSlept createdAt");
 
         const user = await User.findById(id);
 
@@ -304,10 +304,10 @@ export const chartsRouter = createTRPCRouter({
     .query(async ({ input }) => {
       try {
         const { id, version } = input;
-        const todos = (await Form.find({
+        const todos = await Form.find({
           createdBy: id,
           version,
-        }).select("tasksCompleted tasksPlanned createdAt")) as [];
+        }).select("tasksCompleted tasksPlanned createdAt");
 
         if (!todos.length) {
           return {
@@ -340,10 +340,10 @@ export const chartsRouter = createTRPCRouter({
     .query(async ({ input }) => {
       try {
         const { id, version: versionFromClient } = input;
-        const forms = (await Form.find({
+        const forms = await Form.find({
           createdBy: id,
           version: versionFromClient,
-        }).select("hoursPlanned hoursWorked createdAt")) as [];
+        }).select("hoursPlanned hoursWorked createdAt");
 
         const user = await User.findById(id);
 
