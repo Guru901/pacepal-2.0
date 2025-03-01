@@ -31,7 +31,12 @@ export function DailyForm() {
   const { localUser: user } = useGetUser();
 
   const { selectedVersion } = useVersionStore();
-  const { mutate, data, isPending } = api.form.submitForm.useMutation();
+  const {
+    mutate,
+    data,
+    error: errorRTQ,
+    isPending,
+  } = api.form.submitForm.useMutation();
   const [error, setError] = useState("");
 
   const {
@@ -82,7 +87,7 @@ export function DailyForm() {
         sleptWell: formData.sleptWell,
         tasksCompleted: formData.tasksCompleted,
         tasksPlanned: formData.tasksPlanned,
-        hoursPlanned: hoursPlanned ?? 0,
+        hoursPlanned: parseInt(hoursPlanned?.toString() ?? "") ?? 0,
         hoursWorked: formData.hoursWorked,
         followedSchedule: formData.followedSchedule,
         createdBy: user.mongoId,
@@ -384,7 +389,10 @@ export function DailyForm() {
         </form>
       </CardContent>
       <CardFooter className="flex flex-col gap-2">
-        {error && <p className="text-red-500">{error}</p>}
+        {error.length > 0 && <p className="text-red-500">{error}</p>}
+        {errorRTQ?.message && (
+          <p className="text-red-500">{errorRTQ.message}</p>
+        )}
         <Button
           className="w-full"
           onClick={handleSubmit(onSubmit)}
