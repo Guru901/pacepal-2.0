@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Loader } from "@/components/loading";
 import { sleepChartConfig } from "@/lib/chart-configs";
-import { api } from "@/trpc/react";
+import { useSleepData } from "@/hooks/useChartData";
 
 export function SleepChart({
   userId,
@@ -33,10 +33,6 @@ export function SleepChart({
   userId: string;
   selectedVersion: string;
 }) {
-  const { data } = api.charts.getSleepData.useQuery({
-    id: userId,
-    version: selectedVersion,
-  });
   const [chartData, setChartData] = useState([
     {
       date: "",
@@ -46,6 +42,7 @@ export function SleepChart({
   ]);
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState("30d");
+  const { data } = useSleepData(userId, selectedVersion);
 
   const filterDataByTimeRange = (data: [], range: string) => {
     const now = new Date();

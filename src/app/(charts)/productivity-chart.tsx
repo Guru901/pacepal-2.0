@@ -16,7 +16,7 @@ import {
 import { useEffect, useState } from "react";
 import { Loader } from "@/components/loading";
 import { productivityChartConfig } from "@/lib/chart-configs";
-import { api } from "@/trpc/react";
+import { useProductivityData } from "@/hooks/useChartData";
 
 export function ProductivityChart({
   userId,
@@ -31,11 +31,7 @@ export function ProductivityChart({
       date: string;
     }>
   >([]);
-
-  const { data } = api.charts.getProductivityData.useQuery({
-    id: userId,
-    version: selectedVersion,
-  });
+  const { data } = useProductivityData(userId, selectedVersion);
 
   useEffect(() => {
     void (async () => {

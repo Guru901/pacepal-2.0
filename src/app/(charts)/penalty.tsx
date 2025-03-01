@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { api } from "@/trpc/react";
+import { usePenaltyData } from "@/hooks/useChartData";
 import { useEffect, useState } from "react";
 
 export function Penalty({
@@ -18,11 +18,7 @@ export function Penalty({
 }) {
   const [penalty, setPenalty] = useState(0);
   const [loading, setLoading] = useState(true);
-
-  const { data } = api.charts.getPenaltyData.useQuery({
-    id: userId,
-    version: selectedVersion,
-  });
+  const { data } = usePenaltyData(userId, selectedVersion);
 
   useEffect(() => {
     void (async () => {

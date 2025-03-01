@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { Loader } from "@/components/loading";
 import { moodCharConfig as moodChartConfig } from "@/lib/chart-configs";
 import { api } from "@/trpc/react";
+import { useMoodData } from "@/hooks/useChartData";
 
 export function MoodChart({
   userId,
@@ -33,10 +34,7 @@ export function MoodChart({
   ]);
 
   const [loading, setLoading] = useState(true);
-  const { data } = api.charts.getMoodData.useQuery({
-    id: userId,
-    version: selectedVersion,
-  });
+  const { data } = useMoodData(userId, selectedVersion);
 
   useEffect(() => {
     void (async () => {

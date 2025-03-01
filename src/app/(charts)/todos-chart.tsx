@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Loader } from "@/components/loading";
 import { todosChartConfig } from "@/lib/chart-configs";
-import { api } from "@/trpc/react";
+import { useTodosData } from "@/hooks/useChartData";
 
 type TodoData = {
   createdAt?: string;
@@ -39,10 +39,7 @@ export function TodosChart({
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [timeRange, setTimeRange] = useState("30d");
   const [loading, setLoading] = useState(true);
-  const { data } = api.charts.getTodosData.useQuery({
-    id: userId,
-    version: selectedVersion,
-  });
+  const { data } = useTodosData(userId, selectedVersion);
 
   const filterDataByTimeRange = (
     data: TodoData[],

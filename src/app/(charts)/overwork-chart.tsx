@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useEffect, useState } from "react";
-import { api } from "@/trpc/react";
+import { useOverworkData } from "@/hooks/useChartData";
 
 export function OverworkChart({
   userId,
@@ -19,10 +19,7 @@ export function OverworkChart({
 }) {
   const [loading, setLoading] = useState(true);
   const [overWork, setOverWork] = useState(0);
-  const { data } = api.charts.getOverworkData.useQuery({
-    id: userId,
-    version: selectedVersion,
-  });
+  const { data } = useOverworkData(userId, selectedVersion);
 
   useEffect(() => {
     void (async () => {

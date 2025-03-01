@@ -11,8 +11,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useDistractionsData } from "@/hooks/useChartData";
 import { distractionsChartConfig } from "@/lib/chart-configs";
-import { api } from "@/trpc/react";
 import { useEffect, useState } from "react";
 import { LabelList, Pie, PieChart } from "recharts";
 
@@ -35,11 +35,7 @@ export function DistractionsChart({
 }) {
   const [loading, setLoading] = useState(true);
   const [distractions, setDistractions] = useState<Record<string, number>>({});
-
-  const { data } = api.charts.getDistractionsData.useQuery({
-    id: userId,
-    version: selectedVersion,
-  });
+  const { data } = useDistractionsData(userId, selectedVersion);
 
   useEffect(() => {
     void (async () => {
