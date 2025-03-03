@@ -2,6 +2,7 @@ import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import { connectToDB } from "../database/connectToDb";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   return {
@@ -31,5 +32,10 @@ const db = t.middleware(async ({ next }) => {
   return next();
 });
 
-export const publicProcedure = t.procedure;
-export const dbProcedure = t.procedure.use(db);
+const auth = t.middleware(async ({ next }) => {
+  const user = await getKindeServerSession().getUser();
+  return next({ ctx: { userId: user.id } });
+});
+
+export const dbProcedure = t.procedure.use(auth).use(db);
+export const privateProcedure = t.procedure.use(auth);
