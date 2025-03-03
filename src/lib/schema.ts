@@ -71,7 +71,6 @@ export const GetChartsDataSchema = z.object({
 
 export const OnBoardUserSchema = z.object({
   email: z.string().email().min(1, "Email is required"),
-  id: z.string().min(1, "User ID is required"),
   picture: z.string().min(1, "Picture is required"),
   given_name: z.string().min(1, "Given name is required"),
   isOnBoarded: z.boolean(),

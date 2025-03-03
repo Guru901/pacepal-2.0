@@ -11,11 +11,10 @@ import { MongooseError } from "mongoose";
 export const userRouter = createTRPCRouter({
   onboardUser: dbProcedure
     .input(OnBoardUserSchema)
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       try {
         const {
           email,
-          id,
           picture,
           given_name,
           isOnBoarded,
@@ -24,7 +23,7 @@ export const userRouter = createTRPCRouter({
           version,
         } = input;
 
-        const user = await User.findOne({ kindeId: id });
+        const user = await User.findOne({ kindeId: ctx.userId });
 
         if (user) {
           return { message: "User already exists", success: false };
@@ -32,7 +31,7 @@ export const userRouter = createTRPCRouter({
 
         await User.create({
           email,
-          kindeId: id,
+          kindeId: ctx.userId,
           picture,
           given_name,
           isOnBoarded,

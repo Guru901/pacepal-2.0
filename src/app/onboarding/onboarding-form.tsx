@@ -78,7 +78,6 @@ export function OnboardingForm() {
       setBtnLoading(true);
       mutate({
         email: String(user?.email),
-        id: String(user?.id),
         picture: String(user?.picture),
         given_name: String(user?.given_name),
         isOnBoarded: true,
