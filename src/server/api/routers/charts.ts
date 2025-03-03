@@ -8,15 +8,15 @@ import { MongooseError } from "mongoose";
 export const chartsRouter = createTRPCRouter({
   getDistractionsData: dbProcedure
     .input(GetChartsDataSchema)
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       try {
-        const { id, version } = input;
+        const { version } = input;
 
         const distractionsArray: string[] = [];
         const distractions: string[] = [];
 
         const forms = await Form.find({
-          createdBy: id,
+          createdBy: ctx.userId,
           version,
         }).select("distractionsList createdAt");
 
@@ -60,11 +60,11 @@ export const chartsRouter = createTRPCRouter({
 
   getMoodData: dbProcedure
     .input(GetChartsDataSchema)
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       try {
-        const { id, version } = input;
+        const { version } = input;
         const forms = await Form.find({
-          createdBy: id,
+          createdBy: ctx.userId,
           version,
         }).select("mood createdAt");
 
@@ -96,12 +96,12 @@ export const chartsRouter = createTRPCRouter({
 
   getOverworkData: dbProcedure
     .input(GetChartsDataSchema)
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       try {
-        const { id, version } = input;
+        const { version } = input;
         let totalOverWorkHours = 0;
 
-        const forms = await Form.find({ version, createdBy: id });
+        const forms = await Form.find({ version, createdBy: ctx.userId });
 
         forms.forEach((form: { overWork: number }) => {
           totalOverWorkHours += form.overWork;
@@ -129,12 +129,12 @@ export const chartsRouter = createTRPCRouter({
 
   getPenaltyData: dbProcedure
     .input(GetChartsDataSchema)
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       try {
-        const { id, version: versionName } = input;
+        const { version: versionName } = input;
         let penalty = 0;
 
-        const user = await User.findById(id);
+        const user = await User.findById(ctx.userId);
 
         const desiredSleepHours = user?.versions
           ?.map(
@@ -153,7 +153,7 @@ export const chartsRouter = createTRPCRouter({
           });
 
         const forms = await Form.find({
-          createdBy: id,
+          createdBy: ctx.userId,
           version: versionName,
         }).select("hoursSlept");
 
@@ -184,9 +184,9 @@ export const chartsRouter = createTRPCRouter({
 
   getProductivityData: dbProcedure
     .input(GetChartsDataSchema)
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       try {
-        const { id, version } = input;
+        const { version } = input;
 
         const productivityData: {
           date: string;
@@ -194,7 +194,7 @@ export const chartsRouter = createTRPCRouter({
         }[] = [];
 
         const forms = await Form.find({
-          createdBy: id,
+          createdBy: ctx.userId,
           version,
         })
           .select("productivity createdAt")
@@ -240,15 +240,15 @@ export const chartsRouter = createTRPCRouter({
 
   getSleepData: dbProcedure
     .input(GetChartsDataSchema)
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       try {
-        const { id, version: versionFromClient } = input;
+        const { version: versionFromClient } = input;
         const forms = await Form.find({
-          createdBy: id,
+          createdBy: ctx.userId,
           version: versionFromClient,
         }).select("hoursSlept createdAt");
 
-        const user = await User.findById(id);
+        const user = await User.findById(ctx.userId);
 
         const desiredSleepHours = user?.versions
           ?.map(
@@ -301,11 +301,11 @@ export const chartsRouter = createTRPCRouter({
 
   getTodosData: dbProcedure
     .input(GetChartsDataSchema)
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       try {
-        const { id, version } = input;
+        const { version } = input;
         const todos = await Form.find({
-          createdBy: id,
+          createdBy: ctx.userId,
           version,
         }).select("tasksCompleted tasksPlanned createdAt");
 
@@ -337,15 +337,15 @@ export const chartsRouter = createTRPCRouter({
 
   getWorkData: dbProcedure
     .input(GetChartsDataSchema)
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       try {
-        const { id, version: versionFromClient } = input;
+        const { version: versionFromClient } = input;
         const forms = await Form.find({
-          createdBy: id,
+          createdBy: ctx.userId,
           version: versionFromClient,
         }).select("hoursPlanned hoursWorked createdAt");
 
-        const user = await User.findById(id);
+        const user = await User.findById(ctx.userId);
 
         const desiredWorkingHours = user?.versions
           ?.map(

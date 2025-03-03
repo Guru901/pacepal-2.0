@@ -66,7 +66,6 @@ export const DailyFormSchema = z.object({
 export type DailyFormData = z.infer<typeof DailyFormSchema>;
 
 export const GetChartsDataSchema = z.object({
-  id: z.string().min(1, "User ID is required"),
   version: z.string().min(1, "Version is required"),
 });
 
