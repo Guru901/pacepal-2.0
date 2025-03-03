@@ -53,7 +53,6 @@ export const formRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       try {
         const {
-          userId,
           productivity,
           hoursWorked,
           hoursPlanned,
@@ -71,7 +70,6 @@ export const formRouter = createTRPCRouter({
         } = input;
 
         const form = await Form.create({
-          userId,
           productivity,
           hoursWorked,
           hoursPlanned,

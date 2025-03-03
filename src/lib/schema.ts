@@ -81,7 +81,6 @@ export const OnBoardUserSchema = z.object({
 });
 
 export const SubmitFormSchema = z.object({
-  userId: z.string().min(1, "User ID is required"),
   productivity: z.string().min(1, "Please select a productivity rating"),
   tasksCompleted: z
     .number()

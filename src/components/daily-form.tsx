@@ -76,7 +76,6 @@ export function DailyForm() {
     try {
       mutate({
         version: selectedVersion,
-        userId: user?.mongoId,
         selectedVersion: selectedVersion,
         distractions: formData.distractions,
         distractionsList: formData.distractionsList,

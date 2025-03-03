@@ -38,4 +38,3 @@ const auth = t.middleware(async ({ next }) => {
 });
 
 export const dbProcedure = t.procedure.use(auth).use(db);
-export const privateProcedure = t.procedure.use(auth);
