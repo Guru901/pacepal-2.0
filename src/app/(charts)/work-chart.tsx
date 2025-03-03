@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/chart";
 import { Loader } from "@/components/loading";
 import { workChartConfig } from "@/lib/chart-configs";
-import { api } from "@/trpc/react";
 import { useWorkData } from "@/hooks/useChartData";
 
 export function WorkChart({

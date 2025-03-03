@@ -15,7 +15,6 @@ import {
 import { useEffect, useState } from "react";
 import { Loader } from "@/components/loading";
 import { moodCharConfig as moodChartConfig } from "@/lib/chart-configs";
-import { api } from "@/trpc/react";
 import { useMoodData } from "@/hooks/useChartData";
 
 export function MoodChart({
