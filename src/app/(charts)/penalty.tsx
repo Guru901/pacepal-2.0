@@ -18,7 +18,7 @@ export function Penalty({
 }) {
   const [penalty, setPenalty] = useState(0);
   const [loading, setLoading] = useState(true);
-  const { data } = usePenaltyData(userId, selectedVersion);
+  const { data } = usePenaltyData(selectedVersion);
 
   useEffect(() => {
     void (async () => {

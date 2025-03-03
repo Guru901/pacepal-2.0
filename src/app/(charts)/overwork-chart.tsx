@@ -19,7 +19,7 @@ export function OverworkChart({
 }) {
   const [loading, setLoading] = useState(true);
   const [overWork, setOverWork] = useState(0);
-  const { data } = useOverworkData(userId, selectedVersion);
+  const { data } = useOverworkData(selectedVersion);
 
   useEffect(() => {
     void (async () => {

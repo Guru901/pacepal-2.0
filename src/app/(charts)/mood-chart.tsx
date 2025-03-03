@@ -34,7 +34,7 @@ export function MoodChart({
   ]);
 
   const [loading, setLoading] = useState(true);
-  const { data } = useMoodData(userId, selectedVersion);
+  const { data } = useMoodData(selectedVersion);
 
   useEffect(() => {
     void (async () => {

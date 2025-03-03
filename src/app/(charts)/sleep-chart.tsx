@@ -42,7 +42,7 @@ export function SleepChart({
   ]);
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState("30d");
-  const { data } = useSleepData(userId, selectedVersion);
+  const { data } = useSleepData(selectedVersion);
 
   const filterDataByTimeRange = (data: [], range: string) => {
     const now = new Date();

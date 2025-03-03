@@ -31,7 +31,7 @@ export function ProductivityChart({
       date: string;
     }>
   >([]);
-  const { data } = useProductivityData(userId, selectedVersion);
+  const { data } = useProductivityData(selectedVersion);
 
   useEffect(() => {
     void (async () => {

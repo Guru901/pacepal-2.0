@@ -38,7 +38,7 @@ export function WorkChart({
     }>
   >([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { data } = useWorkData(userId, selectedVersion);
+  const { data } = useWorkData(selectedVersion);
 
   useEffect(() => {
     void (async () => {

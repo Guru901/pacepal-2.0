@@ -1,11 +1,7 @@
 import { api } from "@/trpc/react";
 
-export const useDistractionsData = (
-  userId: string,
-  selectedVersion: string,
-) => {
+export const useDistractionsData = (selectedVersion: string) => {
   const query = api.charts.getDistractionsData.useQuery({
-    id: userId,
     version: selectedVersion,
   });
 
@@ -16,9 +12,8 @@ export const useDistractionsData = (
   };
 };
 
-export const useMoodData = (userId: string, selectedVersion: string) => {
+export const useMoodData = (selectedVersion: string) => {
   const query = api.charts.getMoodData.useQuery({
-    id: userId,
     version: selectedVersion,
   });
 
@@ -29,9 +24,8 @@ export const useMoodData = (userId: string, selectedVersion: string) => {
   };
 };
 
-export const useOverworkData = (userId: string, selectedVersion: string) => {
+export const useOverworkData = (selectedVersion: string) => {
   const query = api.charts.getOverworkData.useQuery({
-    id: userId,
     version: selectedVersion,
   });
 
@@ -42,9 +36,8 @@ export const useOverworkData = (userId: string, selectedVersion: string) => {
   };
 };
 
-export const usePenaltyData = (userId: string, selectedVersion: string) => {
+export const usePenaltyData = (selectedVersion: string) => {
   const query = api.charts.getPenaltyData.useQuery({
-    id: userId,
     version: selectedVersion,
   });
 
@@ -55,12 +48,8 @@ export const usePenaltyData = (userId: string, selectedVersion: string) => {
   };
 };
 
-export const useProductivityData = (
-  userId: string,
-  selectedVersion: string,
-) => {
+export const useProductivityData = (selectedVersion: string) => {
   const query = api.charts.getProductivityData.useQuery({
-    id: userId,
     version: selectedVersion,
   });
 
@@ -71,9 +60,8 @@ export const useProductivityData = (
   };
 };
 
-export const useSleepData = (userId: string, selectedVersion: string) => {
+export const useSleepData = (selectedVersion: string) => {
   const query = api.charts.getSleepData.useQuery({
-    id: userId,
     version: selectedVersion,
   });
 
@@ -84,9 +72,8 @@ export const useSleepData = (userId: string, selectedVersion: string) => {
   };
 };
 
-export const useTodosData = (userId: string, selectedVersion: string) => {
+export const useTodosData = (selectedVersion: string) => {
   const query = api.charts.getTodosData.useQuery({
-    id: userId,
     version: selectedVersion,
   });
 
@@ -97,9 +84,8 @@ export const useTodosData = (userId: string, selectedVersion: string) => {
   };
 };
 
-export const useWorkData = (userId: string, selectedVersion: string) => {
+export const useWorkData = (selectedVersion: string) => {
   const query = api.charts.getWorkData.useQuery({
-    id: userId,
     version: selectedVersion,
   });
 

@@ -39,7 +39,7 @@ export function TodosChart({
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [timeRange, setTimeRange] = useState("30d");
   const [loading, setLoading] = useState(true);
-  const { data } = useTodosData(userId, selectedVersion);
+  const { data } = useTodosData(selectedVersion);
 
   const filterDataByTimeRange = (
     data: TodoData[],

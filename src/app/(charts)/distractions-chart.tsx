@@ -35,7 +35,7 @@ export function DistractionsChart({
 }) {
   const [loading, setLoading] = useState(true);
   const [distractions, setDistractions] = useState<Record<string, number>>({});
-  const { data } = useDistractionsData(userId, selectedVersion);
+  const { data } = useDistractionsData(selectedVersion);
 
   useEffect(() => {
     void (async () => {
