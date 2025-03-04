@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { Loader } from "@/components/loading";
-import useGetUser from "@/hooks/use-get-user";
+import useGetUser from "@/hooks/useGetUser";
 import { useUserStore } from "@/store/user-store";
 import { useVersionStore } from "@/store/version-store";
 import { useEffect, useState } from "react";

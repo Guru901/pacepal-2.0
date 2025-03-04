@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { CardContent, CardFooter } from "@/components/ui/card";
-import useGetUser from "@/hooks/use-get-user";
+import useGetUser from "@/hooks/useGetUser";
 import { useRouter } from "next/navigation";
 import { useVersionStore } from "@/store/version-store";
 import { useUserStore } from "@/store/user-store";

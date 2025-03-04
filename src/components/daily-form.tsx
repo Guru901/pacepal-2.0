@@ -23,7 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
 import { useVersionStore } from "@/store/version-store";
-import useGetUser from "@/hooks/use-get-user";
+import useGetUser from "@/hooks/useGetUser";
 import { type DailyFormData, DailyFormSchema } from "@/lib/schema";
 import { api } from "@/trpc/react";
 

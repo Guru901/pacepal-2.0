@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import useGetUser from "@/hooks/use-get-user";
+import useGetUser from "@/hooks/useGetUser";
 import { useVersionStore } from "@/store/version-store";
 import { PencilIcon } from "lucide-react";
 import Link from "next/link";

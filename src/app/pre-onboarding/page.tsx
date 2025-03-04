@@ -1,6 +1,6 @@
 "use client";
 
-import useGetUser from "@/hooks/use-get-user";
+import useGetUser from "@/hooks/useGetUser";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

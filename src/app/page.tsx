@@ -3,7 +3,7 @@
 import { DailyForm } from "@/components/daily-form";
 import Navbar from "@/components/navbar";
 import { useEffect } from "react";
-import useGetUser from "@/hooks/use-get-user";
+import useGetUser from "@/hooks/useGetUser";
 import { Loader } from "@/components/loading";
 import { SleepChart } from "./(charts)/sleep-chart";
 import { TodosChart } from "./(charts)/todos-chart";

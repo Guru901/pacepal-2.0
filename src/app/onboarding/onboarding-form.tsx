@@ -18,7 +18,7 @@ import {
 import { PlusCircle, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
-import useGetUser from "@/hooks/use-get-user";
+import useGetUser from "@/hooks/useGetUser";
 import {
   type OnboardingFormData,
   OnBoardingFormSchema as OnboardingFormSchema,
