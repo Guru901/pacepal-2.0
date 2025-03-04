@@ -23,7 +23,7 @@ export default function Dashboard() {
   const { setSelectedVersion } = useVersionStore();
 
   const userID = user?.mongoId.replaceAll(" ", "_");
-  const { data, isLoading, isPending, refetch } =
+  const { data, isLoading, isPending } =
     api.form.isFormSubmitted.useQuery(userID);
 
   useEffect(() => {
@@ -39,9 +39,7 @@ export default function Dashboard() {
     <main className="relative min-h-screen w-screen">
       <Navbar />
       <div
-        className={
-          !data?.data.isFormSubmitted ? "" : "h-[90vh] overflow-hidden"
-        }
+        className={data?.data.isFormSubmitted ? "" : "h-[90vh] overflow-hidden"}
       >
         <div className="mx-4 flex flex-col gap-2">
           <SleepChart selectedVersion={selectedVersion} />
@@ -61,9 +59,9 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {data?.data.isFormSubmitted && (
+      {!data?.data.isFormSubmitted && (
         <div className="absolute inset-0 flex h-screen items-center justify-center bg-black/50">
-          <DailyForm refetch={refetch} />
+          <DailyForm />
         </div>
       )}
     </main>

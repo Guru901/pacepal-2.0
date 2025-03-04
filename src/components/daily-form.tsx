@@ -25,18 +25,13 @@ import { useState } from "react";
 import { useVersionStore } from "@/store/version-store";
 import useGetUser from "@/hooks/useGetUser";
 import { type DailyFormData, DailyFormSchema } from "@/lib/schema";
-import { api } from "@/trpc/react";
 
-export function DailyForm({ refetch }: { refetch: () => void }) {
+export function DailyForm() {
   const { localUser: user } = useGetUser();
 
   const { selectedVersion } = useVersionStore();
-  const {
-    mutate,
-    data,
-    error: errorRTQ,
-    isPending,
-  } = api.form.submitForm.useMutation();
+  const [loading, setLoading] = useState(false);
+
   const [error, setError] = useState("");
 
   const {
@@ -74,32 +69,42 @@ export function DailyForm({ refetch }: { refetch: () => void }) {
       }, 0);
 
     try {
-      mutate({
-        version: selectedVersion,
-        selectedVersion: selectedVersion,
-        distractions: formData.distractions,
-        distractionsList: formData.distractionsList,
-        mood: formData.mood,
-        hoursSlept: formData.hoursSlept,
-        overWork: formData.overWork,
-        productivity: formData.productivity,
-        sleptWell: formData.sleptWell,
-        tasksCompleted: formData.tasksCompleted,
-        tasksPlanned: formData.tasksPlanned,
-        hoursPlanned: parseInt(hoursPlanned?.toString() ?? "") ?? 0,
-        hoursWorked: formData.hoursWorked,
-        followedSchedule: formData.followedSchedule,
-        createdBy: user.mongoId,
+      setLoading(true);
+      const res = await fetch("/api/submit-form", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          version: selectedVersion,
+          distractions: formData.distractions,
+          distractionsList: formData.distractionsList,
+          mood: formData.mood,
+          hoursSlept: formData.hoursSlept,
+          overWork: formData.overWork,
+          productivity: formData.productivity,
+          sleptWell: formData.sleptWell,
+          tasksCompleted: formData.tasksCompleted,
+          tasksPlanned: formData.tasksPlanned,
+          hoursPlanned: parseInt(hoursPlanned?.toString() ?? "") ?? 0,
+          hoursWorked: formData.hoursWorked,
+          followedSchedule: formData.followedSchedule,
+          createdBy: user.mongoId,
+        }),
       });
-      if (data?.success) {
-        refetch();
-      } else {
-        setError(String(data?.message));
+      const data = (await res.json()) as {
+        success: boolean;
+      };
+
+      if (data.success) {
+        location.reload();
       }
     } catch (error) {
       setError(String(error));
       console.error(error);
       alert("Error submitting reflection. Please try again.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -418,15 +423,13 @@ export function DailyForm({ refetch }: { refetch: () => void }) {
         </CardContent>
         <CardFooter className="flex flex-col gap-2">
           {error.length > 0 && <p className="text-red-500">{error}</p>}
-          {errorRTQ?.message && (
-            <p className="text-red-500">{errorRTQ.message}</p>
-          )}
+
           <Button
             className="w-full"
             onClick={handleSubmit(onSubmit)}
-            disabled={isPending}
+            disabled={loading}
           >
-            {isPending ? "Submitting..." : "Submit Reflection"}
+            {loading ? "Submitting..." : "Submit Reflection"}
           </Button>
         </CardFooter>
       </Card>
