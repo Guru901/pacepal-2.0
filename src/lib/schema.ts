@@ -84,17 +84,16 @@ export const SubmitFormSchema = z.object({
   tasksCompleted: z
     .number()
     .int()
-    .min(0, "Tasks completed must be 0 or greater"),
-  selectedVersion: z.string().min(1, "Please select a version"),
-  tasksPlanned: z.number().int().min(0, "Tasks planned must be 0 or greater"),
+    .min(1, "Tasks completed must be 0 or greater"),
+  tasksPlanned: z.number().int().min(1, "Tasks planned must be 0 or greater"),
   sleptWell: z.enum(["yes", "no"]),
   distractions: z.enum(["yes", "no"]),
   distractionsList: z.string().optional(),
   mood: z.enum(["happy", "tired", "neutral", "stressed", "productive"]),
-  hoursSlept: z.number().min(0, "Hours slept must be 0 or greater"),
+  hoursSlept: z.number().min(1, "Hours slept must be 0 or greater"),
   hoursWorked: z.array(z.object({ name: z.string(), hours: z.number() })),
   overWork: z.number().min(0),
-  hoursPlanned: z.number().int().min(0, "Hours planned must be 0 or greater"),
+  hoursPlanned: z.number().int().min(1, "Hours planned must be 0 or greater"),
   followedSchedule: z.enum(["yes", "no"]),
   version: z.string().min(1, "Version is required"),
   createdBy: z.string().min(1, "Created by is required"),
