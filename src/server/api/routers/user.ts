@@ -23,7 +23,7 @@ export const userRouter = createTRPCRouter({
           version,
         } = input;
 
-        const user = await User.findOne({ kindeId: ctx.userId });
+        const user = await User.findOne({ kindeId: ctx.kindeId });
 
         if (user) {
           return { message: "User already exists", success: false };
@@ -31,7 +31,7 @@ export const userRouter = createTRPCRouter({
 
         await User.create({
           email,
-          kindeId: ctx.userId,
+          kindeId: ctx.kindeId,
           picture,
           given_name,
           isOnBoarded,

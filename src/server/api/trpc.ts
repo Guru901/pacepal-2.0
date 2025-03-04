@@ -3,6 +3,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 import { connectToDB } from "../database/connectToDb";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { User } from "../database/models/user-model";
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   return {
@@ -34,7 +35,8 @@ const db = t.middleware(async ({ next }) => {
 
 const auth = t.middleware(async ({ next }) => {
   const user = await getKindeServerSession().getUser();
-  return next({ ctx: { userId: user.id } });
+  const userFromDatabase = await User.findOne({ kindeId: user.id });
+  return next({ ctx: { userId: userFromDatabase?._id, kindeId: user.id } });
 });
 
 export const dbProcedure = t.procedure.use(auth).use(db);
