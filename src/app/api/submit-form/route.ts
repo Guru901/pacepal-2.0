@@ -1,4 +1,5 @@
 import { SubmitFormSchema } from "@/lib/schema";
+import { connectToDB } from "@/server/database/connectToDb";
 import { Form } from "@/server/database/models/form-model";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { MongooseError } from "mongoose";
@@ -6,6 +7,7 @@ import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
+    await connectToDB();
     getKindeServerSession();
 
     const req = await request.json();

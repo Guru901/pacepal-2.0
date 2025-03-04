@@ -24,9 +24,7 @@ export default function useGetUser() {
         const userId = localUser?.id || user?.id;
 
         try {
-          const data = (await (
-            await fetch("/api/me?kindeId=" + userId)
-          ).json()) as {
+          const data = (await (await fetch("/api/me")).json()) as {
             success: boolean;
             user: {
               email: string;
