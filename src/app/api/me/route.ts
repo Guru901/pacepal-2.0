@@ -1,13 +1,12 @@
 import { connectToDB } from "@/server/database/connectToDb";
 import { User } from "@/server/database/models/user-model";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   await connectToDB();
-  const { id } = await getKindeServerSession().getUser();
+  const kindeId = request.nextUrl.searchParams.get("kindeId");
 
-  const user = await User.findOne({ id });
+  const user = await User.findOne({ kindeId });
 
   if (!user) {
     return NextResponse.json(

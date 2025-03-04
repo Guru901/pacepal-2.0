@@ -22,9 +22,7 @@ export default function Dashboard() {
 
   const { setSelectedVersion } = useVersionStore();
 
-  const userID = user?.mongoId.replaceAll(" ", "_");
-  const { data, isLoading, isPending } =
-    api.form.isFormSubmitted.useQuery(userID);
+  const { data, isLoading, isPending } = api.form.isFormSubmitted.useQuery();
 
   useEffect(() => {
     const selectedVersion = localStorage.getItem("selected-version");

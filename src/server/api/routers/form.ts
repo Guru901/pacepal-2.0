@@ -1,12 +1,10 @@
-import { z } from "zod";
 import { createTRPCRouter, dbProcedure } from "../trpc";
-import { SubmitFormSchema } from "@/lib/schema";
 import { Form } from "@/server/database/models/form-model";
 import { TRPCError } from "@trpc/server";
 import { MongooseError } from "mongoose";
 
 export const formRouter = createTRPCRouter({
-  isFormSubmitted: dbProcedure.input(z.string()).query(async ({ input }) => {
+  isFormSubmitted: dbProcedure.query(async ({ ctx }) => {
     try {
       const startOfToday = new Date();
       startOfToday.setUTCHours(0, 0, 0, 0);
@@ -15,7 +13,7 @@ export const formRouter = createTRPCRouter({
       endOfToday.setUTCHours(23, 59, 59, 999);
 
       const form = await Form.find({
-        createdBy: input,
+        createdBy: ctx.userId,
         createdAt: {
           $gte: startOfToday,
           $lte: endOfToday,
