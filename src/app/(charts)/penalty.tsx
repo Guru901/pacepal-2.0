@@ -7,34 +7,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { usePenaltyData } from "@/hooks/useChartData";
-import { useEffect, useState } from "react";
 
-export function Penalty({
-  userId,
-  selectedVersion,
-}: {
-  userId: string;
-  selectedVersion: string;
-}) {
-  const [penalty, setPenalty] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const { data } = usePenaltyData(selectedVersion);
-
-  useEffect(() => {
-    void (async () => {
-      try {
-        setLoading(true);
-        if (data) {
-          setPenalty(data.data.penalty);
-        }
-      } catch (error) {
-        console.error(error);
-        setPenalty(0);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [userId, selectedVersion, data]);
+export function Penalty({ selectedVersion }: { selectedVersion: string }) {
+  const { data, isLoading } = usePenaltyData(selectedVersion);
 
   return (
     <Card className="w-1/2">
@@ -46,11 +21,11 @@ export function Penalty({
           </CardDescription>
         </div>
       </CardHeader>
-      {loading ? (
+      {isLoading ? (
         <Loader />
       ) : (
         <CardContent className="flex h-[75%] w-full items-center justify-center">
-          <h1 className="text-4xl">{penalty}</h1>
+          <h1 className="text-4xl">{data?.data.penalty}</h1>
         </CardContent>
       )}
     </Card>

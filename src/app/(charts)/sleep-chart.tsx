@@ -26,13 +26,7 @@ import { Loader } from "@/components/loading";
 import { sleepChartConfig } from "@/lib/chart-configs";
 import { useSleepData } from "@/hooks/useChartData";
 
-export function SleepChart({
-  userId,
-  selectedVersion,
-}: {
-  userId: string;
-  selectedVersion: string;
-}) {
+export function SleepChart({ selectedVersion }: { selectedVersion: string }) {
   const [chartData, setChartData] = useState([
     {
       date: "",
@@ -40,9 +34,8 @@ export function SleepChart({
       desired_sleep_hrs: 0,
     },
   ]);
-  const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState("30d");
-  const { data } = useSleepData(selectedVersion);
+  const { data, isLoading } = useSleepData(selectedVersion);
 
   const filterDataByTimeRange = (data: [], range: string) => {
     const now = new Date();
@@ -65,7 +58,6 @@ export function SleepChart({
   useEffect(() => {
     void (async () => {
       try {
-        setLoading(true);
         if (data?.success && Array.isArray(data.data.forms)) {
           const filteredData = filterDataByTimeRange(
             // @ts-expect-error FIXME
@@ -85,12 +77,9 @@ export function SleepChart({
         }
       } catch (error) {
         console.error("Error fetching sleep data:", error);
-      } finally {
-        setLoading(false);
       }
     })();
   }, [
-    userId,
     timeRange,
     selectedVersion,
     data?.success,
@@ -127,7 +116,7 @@ export function SleepChart({
           </SelectContent>
         </Select>
       </CardHeader>
-      {loading ? (
+      {isLoading ? (
         <Loader />
       ) : (
         <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">

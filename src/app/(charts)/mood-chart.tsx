@@ -17,13 +17,7 @@ import { Loader } from "@/components/loading";
 import { moodCharConfig as moodChartConfig } from "@/lib/chart-configs";
 import { useMoodData } from "@/hooks/useChartData";
 
-export function MoodChart({
-  userId,
-  selectedVersion,
-}: {
-  userId: string;
-  selectedVersion: string;
-}) {
+export function MoodChart({ selectedVersion }: { selectedVersion: string }) {
   const [chartData, setChartData] = useState([
     { mood: "happy", freq: 0, fill: "#2662D9" },
     { mood: "tired", freq: 0, fill: "#2EB88A" },
@@ -32,14 +26,11 @@ export function MoodChart({
     { mood: "productive", freq: 0, fill: "#9062cd" },
   ]);
 
-  const [loading, setLoading] = useState(true);
-  const { data } = useMoodData(selectedVersion);
+  const { data, isLoading } = useMoodData(selectedVersion);
 
   useEffect(() => {
     void (async () => {
       try {
-        setLoading(true);
-
         if (data?.success) {
           const moodCounts = {
             happy: 0,
@@ -68,11 +59,9 @@ export function MoodChart({
         }
       } catch (error) {
         console.error("Error fetching mood data:", error);
-      } finally {
-        setLoading(false);
       }
     })();
-  }, [userId, selectedVersion, data?.success, data?.data.forms]);
+  }, [selectedVersion, data?.success, data?.data.forms]);
 
   return (
     <Card className="flex w-[50vw] flex-col">
@@ -82,7 +71,7 @@ export function MoodChart({
           <CardDescription>Shows your mood over time</CardDescription>
         </div>
       </CardHeader>
-      {loading ? (
+      {isLoading ? (
         <Loader />
       ) : (
         <CardContent className="flex-1 pb-0">

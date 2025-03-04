@@ -7,36 +7,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useEffect, useState } from "react";
 import { useOverworkData } from "@/hooks/useChartData";
 
 export function OverworkChart({
-  userId,
   selectedVersion,
 }: {
-  userId: string;
   selectedVersion: string;
 }) {
-  const [loading, setLoading] = useState(true);
-  const [overWork, setOverWork] = useState(0);
-  const { data } = useOverworkData(selectedVersion);
-
-  useEffect(() => {
-    void (async () => {
-      try {
-        setLoading(true);
-
-        if (data) {
-          setOverWork(data.data.overWork);
-        }
-      } catch (error) {
-        console.error(error);
-        setOverWork(0);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [selectedVersion, userId, data, data?.data.overWork]);
+  const { data, isLoading } = useOverworkData(selectedVersion);
 
   return (
     <Card className="w-1/2">
@@ -48,11 +26,11 @@ export function OverworkChart({
           </CardDescription>
         </div>
       </CardHeader>
-      {loading ? (
+      {isLoading ? (
         <Loader />
       ) : (
         <CardContent className="flex h-[75%] w-full items-center justify-center">
-          <h1 className="text-4xl">{overWork}</h1>
+          <h1 className="text-4xl">{data?.data.overWork}</h1>
         </CardContent>
       )}
     </Card>

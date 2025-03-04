@@ -19,24 +19,20 @@ import { productivityChartConfig } from "@/lib/chart-configs";
 import { useProductivityData } from "@/hooks/useChartData";
 
 export function ProductivityChart({
-  userId,
   selectedVersion,
 }: {
-  userId: string;
   selectedVersion: string;
 }) {
-  const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState<
     Array<{
       date: string;
     }>
   >([]);
-  const { data } = useProductivityData(selectedVersion);
+  const { data, isLoading } = useProductivityData(selectedVersion);
 
   useEffect(() => {
     void (async () => {
       try {
-        setLoading(true);
         if (data?.success) {
           setChartData(
             data.data.productivityData
@@ -49,11 +45,9 @@ export function ProductivityChart({
         }
       } catch (error) {
         console.error("Error fetching productivity data:", error);
-      } finally {
-        setLoading(false);
       }
     })();
-  }, [userId, selectedVersion, data?.success, data?.data.productivityData]);
+  }, [selectedVersion, data?.success, data?.data.productivityData]);
 
   return (
     <Card className="w-full">
@@ -66,7 +60,7 @@ export function ProductivityChart({
         </div>
       </CardHeader>
       <CardContent className="px-2 sm:p-6">
-        {loading ? (
+        {isLoading ? (
           <Loader />
         ) : (
           <ChartContainer

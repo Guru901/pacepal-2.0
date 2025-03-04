@@ -29,17 +29,10 @@ type ChartData = {
   tasksPlanned: number;
 };
 
-export function TodosChart({
-  userId,
-  selectedVersion,
-}: {
-  userId: string;
-  selectedVersion: string;
-}) {
+export function TodosChart({ selectedVersion }: { selectedVersion: string }) {
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [timeRange, setTimeRange] = useState("30d");
-  const [loading, setLoading] = useState(true);
-  const { data } = useTodosData(selectedVersion);
+  const { data, isLoading } = useTodosData(selectedVersion);
 
   const filterDataByTimeRange = (
     data: TodoData[],
@@ -66,7 +59,6 @@ export function TodosChart({
   useEffect(() => {
     void (async () => {
       try {
-        setLoading(true);
         if (data?.success && data.data.todos) {
           // @ts-expect-error FIXME
           const formattedData = data.data.todos.map((item: TodoData) => ({
@@ -96,13 +88,11 @@ export function TodosChart({
         }
       } catch (error) {
         console.error("Error fetching todos data:", error);
-      } finally {
-        setLoading(false);
       }
     })();
-  }, [userId, timeRange, selectedVersion, data?.success, data?.data.todos]);
+  }, [timeRange, selectedVersion, data?.success, data?.data.todos]);
 
-  if (loading) return <Loader />;
+  if (isLoading) return <Loader />;
 
   return (
     <Card>

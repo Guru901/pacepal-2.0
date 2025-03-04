@@ -18,13 +18,7 @@ import { Loader } from "@/components/loading";
 import { workChartConfig } from "@/lib/chart-configs";
 import { useWorkData } from "@/hooks/useChartData";
 
-export function WorkChart({
-  userId,
-  selectedVersion,
-}: {
-  userId: string;
-  selectedVersion: string;
-}) {
+export function WorkChart({ selectedVersion }: { selectedVersion: string }) {
   const [desiredWorkHrs, setDesiredWorkHrs] = useState<
     Array<{
       name: string;
@@ -36,14 +30,11 @@ export function WorkChart({
       date: string;
     }>
   >([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const { data } = useWorkData(selectedVersion);
+  const { data, isLoading } = useWorkData(selectedVersion);
 
   useEffect(() => {
     void (async () => {
       try {
-        setIsLoading(true);
-
         if (data?.success && data.data.desiredWorkingHours) {
           const desiredHours = data.data.desiredWorkingHours[0]!;
           setDesiredWorkHrs(desiredHours);
@@ -82,14 +73,11 @@ export function WorkChart({
         }
       } catch (error) {
         console.error("Error fetching work data:", error);
-      } finally {
-        setIsLoading(false);
       }
     })();
   }, [
-    userId,
     selectedVersion,
-    setIsLoading,
+    isLoading,
     data?.success,
     data?.data.desiredWorkingHours,
     data?.data.forms,

@@ -27,21 +27,16 @@ function generateColors(count: number) {
 }
 
 export function DistractionsChart({
-  userId,
   selectedVersion,
 }: {
-  userId: string;
   selectedVersion: string;
 }) {
-  const [loading, setLoading] = useState(true);
   const [distractions, setDistractions] = useState<Record<string, number>>({});
-  const { data } = useDistractionsData(selectedVersion);
+  const { data, isLoading } = useDistractionsData(selectedVersion);
 
   useEffect(() => {
     void (async () => {
       try {
-        setLoading(true);
-
         if (data?.success) {
           const distractionCounts = data.data.distractions.reduce(
             (acc: Record<string, number>, distraction: string) => {
@@ -54,11 +49,9 @@ export function DistractionsChart({
         }
       } catch (error) {
         console.error("Error fetching distractions data:", error);
-      } finally {
-        setLoading(false);
       }
     })();
-  }, [userId, selectedVersion, data?.success, data?.data.distractions]);
+  }, [selectedVersion, data?.success, data?.data.distractions]);
 
   const dynamicColors = generateColors(Object.keys(distractions).length);
 
@@ -72,7 +65,7 @@ export function DistractionsChart({
 
   return (
     <Card className="flex w-[50vw] flex-col">
-      {loading ? (
+      {isLoading ? (
         <Loader />
       ) : (
         <>
