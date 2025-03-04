@@ -55,6 +55,7 @@ export const userRouter = createTRPCRouter({
           throw new TRPCError({
             message: "Database error",
             code: "INTERNAL_SERVER_ERROR",
+            cause: error,
           });
         }
         throw new TRPCError({
@@ -99,6 +100,7 @@ export const userRouter = createTRPCRouter({
           throw new TRPCError({
             message: "Database error",
             code: "INTERNAL_SERVER_ERROR",
+            cause: error,
           });
         }
         throw new TRPCError({
@@ -151,6 +153,7 @@ export const userRouter = createTRPCRouter({
           throw new TRPCError({
             message: "Database error",
             code: "INTERNAL_SERVER_ERROR",
+            cause: error,
           });
         }
         throw new TRPCError({

@@ -35,6 +35,7 @@ export const versionRouter = createTRPCRouter({
         throw new TRPCError({
           message: "Database error",
           code: "INTERNAL_SERVER_ERROR",
+          cause: error,
         });
       }
       throw new TRPCError({

@@ -39,6 +39,7 @@ export const formRouter = createTRPCRouter({
         throw new TRPCError({
           message: "Database error",
           code: "INTERNAL_SERVER_ERROR",
+          cause: error,
         });
       }
       throw new TRPCError({
@@ -92,6 +93,7 @@ export const formRouter = createTRPCRouter({
           throw new TRPCError({
             message: "Database error",
             code: "INTERNAL_SERVER_ERROR",
+            cause: error,
           });
         }
         throw new TRPCError({
