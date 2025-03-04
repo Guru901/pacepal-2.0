@@ -2,7 +2,7 @@
 
 import { DailyForm } from "@/components/daily-form";
 import Navbar from "@/components/navbar";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useGetUser from "@/hooks/use-get-user";
 import { Loader } from "@/components/loading";
 import { SleepChart } from "./(charts)/sleep-chart";
@@ -20,33 +20,11 @@ export default function Dashboard() {
   const { localUser: user } = useGetUser();
   const { selectedVersion } = useVersionStore();
 
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const [loading, setLoading] = useState(true);
   const { setSelectedVersion } = useVersionStore();
 
   const userID = user?.mongoId.replaceAll(" ", "_");
-  const { data } = api.form.isFormSubmitted.useQuery(userID);
-
-  useEffect(() => {
-    void (async () => {
-      try {
-        if (data?.success) {
-          if (data.data.isFormSubmitted) {
-            setIsFormSubmitted(true);
-          }
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [
-    user.mongoId,
-    isFormSubmitted,
-    data?.success,
-    data?.data.isFormSubmitted,
-  ]);
+  const { data, isLoading, isPending } =
+    api.form.isFormSubmitted.useQuery(userID);
 
   useEffect(() => {
     const selectedVersion = localStorage.getItem("selected-version");
@@ -55,11 +33,12 @@ export default function Dashboard() {
     }
   }, [selectedVersion, setSelectedVersion]);
 
-  if (loading || !user?.id) return <Loader />;
+  if (isLoading || isPending || !user?.id) return <Loader />;
+
   return (
     <main>
       <Navbar />
-      {!isFormSubmitted ? (
+      {!data?.data.isFormSubmitted ? (
         <div>
           <DailyForm />
         </div>
