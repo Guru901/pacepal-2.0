@@ -23,7 +23,7 @@ export default function Dashboard() {
   const { setSelectedVersion } = useVersionStore();
 
   const userID = user?.mongoId.replaceAll(" ", "_");
-  const { data, isLoading, isPending } =
+  const { data, isLoading, isPending, refetch } =
     api.form.isFormSubmitted.useQuery(userID);
 
   useEffect(() => {
@@ -36,52 +36,34 @@ export default function Dashboard() {
   if (isLoading || isPending || !user?.id) return <Loader />;
 
   return (
-    <main>
+    <main className="relative min-h-screen w-screen">
       <Navbar />
-      {!data?.data.isFormSubmitted ? (
-        <div>
-          <DailyForm />
-        </div>
-      ) : (
+      <div
+        className={
+          !data?.data.isFormSubmitted ? "" : "h-[90vh] overflow-hidden"
+        }
+      >
         <div className="mx-4 flex flex-col gap-2">
-          <SleepChart
-            userId={String(user?.mongoId)}
-            selectedVersion={selectedVersion}
-          />
-          <TodosChart
-            userId={String(user?.mongoId)}
-            selectedVersion={selectedVersion}
-          />
-          <WorkChart
-            userId={String(user?.mongoId)}
-            selectedVersion={selectedVersion}
-          />
+          <SleepChart selectedVersion={selectedVersion} />
+          <TodosChart selectedVersion={selectedVersion} />
+          <WorkChart selectedVersion={selectedVersion} />
           <div className="flex gap-2">
-            <MoodChart
-              userId={String(user?.mongoId)}
-              selectedVersion={selectedVersion}
-            />
+            <MoodChart selectedVersion={selectedVersion} />
             <div className="flex w-1/2 gap-2">
-              <Penalty
-                userId={String(user?.mongoId)}
-                selectedVersion={selectedVersion}
-              />
-              <OverworkChart
-                userId={String(user?.mongoId)}
-                selectedVersion={selectedVersion}
-              />
+              <Penalty selectedVersion={selectedVersion} />
+              <OverworkChart selectedVersion={selectedVersion} />
             </div>
           </div>
           <div className="flex gap-2">
-            <DistractionsChart
-              userId={String(user?.mongoId)}
-              selectedVersion={selectedVersion}
-            />
-            <ProductivityChart
-              userId={String(user?.mongoId)}
-              selectedVersion={selectedVersion}
-            />
+            <DistractionsChart selectedVersion={selectedVersion} />
+            <ProductivityChart selectedVersion={selectedVersion} />
           </div>
+        </div>
+      </div>
+
+      {data?.data.isFormSubmitted && (
+        <div className="absolute inset-0 flex h-screen items-center justify-center bg-black/50">
+          <DailyForm refetch={refetch} />
         </div>
       )}
     </main>

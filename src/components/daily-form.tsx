@@ -27,7 +27,7 @@ import useGetUser from "@/hooks/use-get-user";
 import { type DailyFormData, DailyFormSchema } from "@/lib/schema";
 import { api } from "@/trpc/react";
 
-export function DailyForm() {
+export function DailyForm({ refetch }: { refetch: () => void }) {
   const { localUser: user } = useGetUser();
 
   const { selectedVersion } = useVersionStore();
@@ -92,7 +92,7 @@ export function DailyForm() {
         createdBy: user.mongoId,
       });
       if (data?.success) {
-        location.reload();
+        refetch();
       } else {
         setError(String(data?.message));
       }
@@ -104,302 +104,332 @@ export function DailyForm() {
   }
 
   return (
-    <Card className="mx-auto w-full max-w-2xl">
-      <CardHeader>
-        <CardTitle className="text-center text-2xl font-bold">
-          Daily Reflection
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <Label>Did you follow the schedule today?</Label>
-            <Controller
-              name="followedSchedule"
-              control={control}
-              render={({ field }) => (
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-col space-y-1"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="yes" id="schedule-yes" />
-                    <Label htmlFor="schedule-yes">Yes</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="no" id="schedule-no" />
-                    <Label htmlFor="schedule-no">No</Label>
-                  </div>
-                </RadioGroup>
-              )}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="version">Version</Label>
-            <p>{selectedVersion}</p>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="productivity">Rate your productivity (1-10)</Label>
-            <Controller
-              name="productivity"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a rating" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
-                    {[...Array(10)].map((_, i) => (
-                      <SelectItem key={i} value={`${i + 1}`}>
-                        {i + 1}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            {errors.productivity && (
-              <p className="text-sm text-red-500">
-                {errors.productivity.message}
-              </p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="hoursWorked">Hours worked</Label>
-            <div className="flex flex-wrap gap-2">
-              {user?.versions.map((version) => {
-                if (version.versionName === selectedVersion) {
-                  const slots = version.data.slots;
-                  return slots.map((slot) => (
-                    <Controller
-                      key={`hoursWorked-${slot.name}`}
-                      name="hoursWorked"
-                      control={control}
-                      render={({ field: { value, onChange } }) => (
-                        <div className="flex w-full max-w-[150px] flex-col space-y-1">
-                          <Label className="text-xs">
-                            {slot.name} - {slot.hours} hours
-                          </Label>
-                          <Input
-                            type="number"
-                            step="0.5"
-                            placeholder={`${slot.name} hours`}
-                            onChange={(e) => {
-                              const hours = parseFloat(e.target.value);
-                              const newValue = isNaN(hours)
-                                ? value.filter(
-                                    (item) => item.name !== slot.name,
-                                  )
-                                : [
-                                    ...value.filter(
-                                      (item) => item.name !== slot.name,
-                                    ),
-                                    { name: slot.name, hours: hours },
-                                  ];
-                              onChange(newValue);
-                            }}
-                            value={
-                              value?.find((item) => item.name === slot.name)
-                                ?.hours ?? ""
-                            }
-                          />
+    <div className="flex h-full w-screen items-center justify-center">
+      <Card className="mx-auto w-full max-w-6xl border-white/40 shadow-2xl">
+        <CardHeader>
+          <CardTitle className="text-center text-2xl font-bold">
+            Daily Reflection
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {/* First column */}
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Did you follow the schedule today?</Label>
+                  <Controller
+                    name="followedSchedule"
+                    control={control}
+                    render={({ field }) => (
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex gap-4"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="yes" id="schedule-yes" />
+                          <Label htmlFor="schedule-yes">Yes</Label>
                         </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="no" id="schedule-no" />
+                          <Label htmlFor="schedule-no">No</Label>
+                        </div>
+                      </RadioGroup>
+                    )}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="version">Version</Label>
+                  <p>{selectedVersion}</p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="productivity">
+                    Rate your productivity (1-10)
+                  </Label>
+                  <Controller
+                    name="productivity"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a rating" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
+                          {[...Array(10)].map((_, i) => (
+                            <SelectItem key={i} value={`${i + 1}`}>
+                              {i + 1}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.productivity && (
+                    <p className="text-sm text-red-500">
+                      {errors.productivity.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="tasksCompleted">Tasks completed</Label>
+                    <Controller
+                      name="tasksCompleted"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          type="number"
+                          id="tasksCompleted"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(Number.parseInt(e.target.value))
+                          }
+                        />
                       )}
                     />
-                  ));
-                }
-                return null;
-              })}
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="tasksCompleted">Tasks completed</Label>
-              <Controller
-                name="tasksCompleted"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    type="number"
-                    id="tasksCompleted"
-                    {...field}
-                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    {errors.tasksCompleted && (
+                      <p className="text-sm text-red-500">
+                        {errors.tasksCompleted.message}
+                      </p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="tasksPlanned">Tasks planned</Label>
+                    <Controller
+                      name="tasksPlanned"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          type="number"
+                          id="tasksPlanned"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(Number.parseInt(e.target.value))
+                          }
+                        />
+                      )}
+                    />
+                    {errors.tasksPlanned && (
+                      <p className="text-sm text-red-500">
+                        {errors.tasksPlanned.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Second column */}
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="hoursWorked">Hours worked</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {user?.versions.map((version) => {
+                      if (version.versionName === selectedVersion) {
+                        const slots = version.data.slots;
+                        return slots.map((slot) => (
+                          <Controller
+                            key={`hoursWorked-${slot.name}`}
+                            name="hoursWorked"
+                            control={control}
+                            render={({ field: { value, onChange } }) => (
+                              <div className="flex flex-col space-y-1">
+                                <Label className="text-xs">
+                                  {slot.name} - {slot.hours} hours
+                                </Label>
+                                <Input
+                                  type="number"
+                                  step="0.5"
+                                  placeholder={`${slot.name} hours`}
+                                  onChange={(e) => {
+                                    const hours = Number.parseFloat(
+                                      e.target.value,
+                                    );
+                                    const newValue = isNaN(hours)
+                                      ? value.filter(
+                                          (item) => item.name !== slot.name,
+                                        )
+                                      : [
+                                          ...value.filter(
+                                            (item) => item.name !== slot.name,
+                                          ),
+                                          { name: slot.name, hours: hours },
+                                        ];
+                                    onChange(newValue);
+                                  }}
+                                  value={
+                                    value?.find(
+                                      (item) => item.name === slot.name,
+                                    )?.hours ?? ""
+                                  }
+                                />
+                              </div>
+                            )}
+                          />
+                        ));
+                      }
+                      return null;
+                    })}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Overwork hours(if any)</Label>
+                  <Controller
+                    name="overWork"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="number"
+                        id="overWork"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(Number.parseFloat(e.target.value))
+                        }
+                      />
+                    )}
                   />
-                )}
-              />
-              {errors.tasksCompleted && (
-                <p className="text-sm text-red-500">
-                  {errors.tasksCompleted.message}
-                </p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="tasksPlanned">Tasks planned</Label>
-              <Controller
-                name="tasksPlanned"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    type="number"
-                    id="tasksPlanned"
-                    {...field}
-                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                </div>
+              </div>
+
+              {/* Third column */}
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>
+                    Did you sleep more than{" "}
+                    {user?.versions.map((version) => {
+                      if (version.versionName === selectedVersion) {
+                        return version.data.desiredSleepHours;
+                      }
+                    })}
+                    hours?
+                  </Label>
+                  <Controller
+                    name="sleptWell"
+                    control={control}
+                    render={({ field }) => (
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex gap-4"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="yes" id="sleep-yes" />
+                          <Label htmlFor="sleep-yes">Yes</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="no" id="sleep-no" />
+                          <Label htmlFor="sleep-no">No</Label>
+                        </div>
+                      </RadioGroup>
+                    )}
                   />
-                )}
-              />
-              {errors.tasksPlanned && (
-                <p className="text-sm text-red-500">
-                  {errors.tasksPlanned.message}
-                </p>
-              )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label>How many hours did you sleep?</Label>
+                  <Controller
+                    name="hoursSlept"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="number"
+                        id="hoursSlept"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(Number.parseFloat(e.target.value))
+                        }
+                      />
+                    )}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Any distractions?</Label>
+                  <Controller
+                    name="distractions"
+                    control={control}
+                    render={({ field }) => (
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex gap-4"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="yes" id="distractions-yes" />
+                          <Label htmlFor="distractions-yes">Yes</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="no" id="distractions-no" />
+                          <Label htmlFor="distractions-no">No</Label>
+                        </div>
+                      </RadioGroup>
+                    )}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="distractionsList">
+                    If yes, list them: (separate with comma)
+                  </Label>
+                  <Controller
+                    name="distractionsList"
+                    control={control}
+                    render={({ field }) => (
+                      <Textarea id="distractionsList" {...field} />
+                    )}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="mood">How did you feel today?</Label>
+                  <Controller
+                    name="mood"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a mood" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="happy">Happy</SelectItem>
+                          <SelectItem value="tired">Tired</SelectItem>
+                          <SelectItem value="neutral">Neutral</SelectItem>
+                          <SelectItem value="stressed">Stressed</SelectItem>
+                          <SelectItem value="productive">Productive</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="space-y-2">
-            <Label>
-              Did you sleep more than{" "}
-              {user?.versions.map((version) => {
-                if (version.versionName === selectedVersion) {
-                  return version.data.desiredSleepHours;
-                }
-              })}
-              hours?
-            </Label>
-            <Controller
-              name="sleptWell"
-              control={control}
-              render={({ field }) => (
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-col space-y-1"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="yes" id="sleep-yes" />
-                    <Label htmlFor="sleep-yes">Yes</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="no" id="sleep-no" />
-                    <Label htmlFor="sleep-no">No</Label>
-                  </div>
-                </RadioGroup>
-              )}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>How many hours did you sleep?</Label>
-            <Controller
-              name="hoursSlept"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  type="number"
-                  id="hoursSlept"
-                  {...field}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                />
-              )}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Any distractions?</Label>
-            <Controller
-              name="distractions"
-              control={control}
-              render={({ field }) => (
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-col space-y-1"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="yes" id="distractions-yes" />
-                    <Label htmlFor="distractions-yes">Yes</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="no" id="distractions-no" />
-                    <Label htmlFor="distractions-no">No</Label>
-                  </div>
-                </RadioGroup>
-              )}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="distractionsList">
-              If yes, list them: (separate with comma)
-            </Label>
-            <Controller
-              name="distractionsList"
-              control={control}
-              render={({ field }) => (
-                <Textarea id="distractionsList" {...field} />
-              )}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Overwork hours(if any)</Label>
-            <Controller
-              name="overWork"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  type="number"
-                  id="overWork"
-                  {...field}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                />
-              )}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="mood">How did you feel today?</Label>
-            <Controller
-              name="mood"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a mood" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="happy">Happy</SelectItem>
-                    <SelectItem value="tired">Tired</SelectItem>
-                    <SelectItem value="neutral">Neutral</SelectItem>
-                    <SelectItem value="stressed">Stressed</SelectItem>
-                    <SelectItem value="productive">Productive</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-          </div>
-        </form>
-      </CardContent>
-      <CardFooter className="flex flex-col gap-2">
-        {error.length > 0 && <p className="text-red-500">{error}</p>}
-        {errorRTQ?.message && (
-          <p className="text-red-500">{errorRTQ.message}</p>
-        )}
-        <Button
-          className="w-full"
-          onClick={handleSubmit(onSubmit)}
-          disabled={isPending}
-        >
-          {isPending ? "Submitting..." : "Submit Reflection"}
-        </Button>
-      </CardFooter>
-    </Card>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col gap-2">
+          {error.length > 0 && <p className="text-red-500">{error}</p>}
+          {errorRTQ?.message && (
+            <p className="text-red-500">{errorRTQ.message}</p>
+          )}
+          <Button
+            className="w-full"
+            onClick={handleSubmit(onSubmit)}
+            disabled={isPending}
+          >
+            {isPending ? "Submitting..." : "Submit Reflection"}
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
   );
 }
