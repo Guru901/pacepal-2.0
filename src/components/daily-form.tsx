@@ -143,11 +143,21 @@ export function DailyForm() {
                       </RadioGroup>
                     )}
                   />
+                  {errors.followedSchedule && (
+                    <p className="text-sm text-red-500">
+                      {errors.followedSchedule.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="version">Version</Label>
                   <p>{selectedVersion}</p>
+                  {errors.selectedVersion && (
+                    <p className="text-sm text-red-500">
+                      {errors.selectedVersion.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -283,6 +293,11 @@ export function DailyForm() {
                       return null;
                     })}
                   </div>
+                  {errors.hoursWorked && (
+                    <p className="text-sm text-red-500">
+                      {errors.hoursWorked.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -301,6 +316,11 @@ export function DailyForm() {
                       />
                     )}
                   />
+                  {errors.overWork && (
+                    <p className="text-sm text-red-500">
+                      {errors.overWork.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -336,6 +356,11 @@ export function DailyForm() {
                       </RadioGroup>
                     )}
                   />
+                  {errors.sleptWell && (
+                    <p className="text-sm text-red-500">
+                      {errors.sleptWell.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -354,6 +379,11 @@ export function DailyForm() {
                       />
                     )}
                   />
+                  {errors.hoursSlept && (
+                    <p className="text-sm text-red-500">
+                      {errors.hoursSlept.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -378,6 +408,11 @@ export function DailyForm() {
                       </RadioGroup>
                     )}
                   />
+                  {errors.distractions && (
+                    <p className="text-sm text-red-500">
+                      {errors.distractions.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -391,6 +426,11 @@ export function DailyForm() {
                       <Textarea id="distractionsList" {...field} />
                     )}
                   />
+                  {errors.distractionsList && (
+                    <p className="text-sm text-red-500">
+                      {errors.distractionsList.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -416,6 +456,11 @@ export function DailyForm() {
                       </Select>
                     )}
                   />
+                  {errors.mood && (
+                    <p className="text-sm text-red-500">
+                      {errors.mood.message}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
