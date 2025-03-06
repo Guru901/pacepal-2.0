@@ -11,7 +11,7 @@ export const SlotSchema = z.object({
 export const OnBoardingFormSchema = z.object({
   desiredSleepHours: z
     .number()
-    .min(0, "Sleep hours must be 0 or greater")
+    .min(4, "Sleep hours must be 4 or greater")
     .max(24, "Sleep hours cannot exceed 24"),
   slots: z.array(SlotSchema),
   version: z.string(),
@@ -50,7 +50,7 @@ export const DailyFormSchema = z.object({
   tasksCompleted: z
     .number()
     .int()
-    .min(1, "Tasks completed must be 0 or greater"),
+    .min(1, "Tasks completed must be 1 or greater"),
   selectedVersion: z.string().min(1, "Please select a version"),
   userId: z.string().min(1, "User ID is required"),
   tasksPlanned: z.number().int().min(1, "Tasks planned must be 0 or greater"),
@@ -58,7 +58,7 @@ export const DailyFormSchema = z.object({
   distractions: z.enum(["yes", "no"]),
   distractionsList: z.string().optional(),
   mood: z.enum(["happy", "tired", "neutral", "stressed", "productive"]),
-  hoursSlept: z.number().min(1, "Hours slept must be 0 or greater"),
+  hoursSlept: z.number().min(4, "Hours slept must be 4 or greater"),
   hoursWorked: z.array(z.object({ name: z.string(), hours: z.number() })),
   overWork: z.number().min(0),
 });
@@ -84,16 +84,16 @@ export const SubmitFormSchema = z.object({
   tasksCompleted: z
     .number()
     .int()
-    .min(1, "Tasks completed must be 0 or greater"),
-  tasksPlanned: z.number().int().min(1, "Tasks planned must be 0 or greater"),
+    .min(1, "Tasks completed must be 1 or greater"),
+  tasksPlanned: z.number().int().min(1, "Tasks planned must be 1 or greater"),
   sleptWell: z.enum(["yes", "no"]),
   distractions: z.enum(["yes", "no"]),
   distractionsList: z.string().optional(),
   mood: z.enum(["happy", "tired", "neutral", "stressed", "productive"]),
-  hoursSlept: z.number().min(1, "Hours slept must be 0 or greater"),
+  hoursSlept: z.number().min(4, "Hours slept must be 4 or greater"),
   hoursWorked: z.array(z.object({ name: z.string(), hours: z.number() })),
   overWork: z.number().min(0),
-  hoursPlanned: z.number().int().min(1, "Hours planned must be 0 or greater"),
+  hoursPlanned: z.number().int().min(1, "Hours planned must be 1 or greater"),
   followedSchedule: z.enum(["yes", "no"]),
   version: z.string().min(1, "Version is required"),
   createdBy: z.string().min(1, "Created by is required"),
