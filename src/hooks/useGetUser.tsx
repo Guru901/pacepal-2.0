@@ -12,6 +12,7 @@ export default function useGetUser() {
 
   useEffect(() => {
     const user = getUser();
+    const userId = localUser?.id || user?.id;
 
     if (!localUser?.id.length) {
       if (isLoading) {
@@ -21,9 +22,8 @@ export default function useGetUser() {
         setError("not logged in");
       }
       const fetchUser = async () => {
-        const userId = localUser?.id || user?.id;
-
         try {
+          if (!userId) return;
           const data = (await (
             await fetch("/api/me?kindeId=" + userId)
           ).json()) as {

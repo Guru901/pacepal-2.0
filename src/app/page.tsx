@@ -3,7 +3,6 @@
 import { DailyForm } from "@/components/daily-form";
 import Navbar from "@/components/navbar";
 import { useEffect } from "react";
-import useGetUser from "@/hooks/useGetUser";
 import { Loader } from "@/components/loading";
 import { SleepChart } from "./(charts)/sleep-chart";
 import { TodosChart } from "./(charts)/todos-chart";
@@ -15,15 +14,13 @@ import { DistractionsChart } from "./(charts)/distractions-chart";
 import { ProductivityChart } from "@/app/(charts)/productivity-chart";
 import { useVersionStore } from "@/store/version-store";
 import { api } from "@/trpc/react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 export default function Dashboard() {
-  const { localUser: user } = useGetUser();
   const { selectedVersion } = useVersionStore();
 
   const { setSelectedVersion } = useVersionStore();
 
-  const { data, isLoading, isPending } = api.form.isFormSubmitted.useQuery();
+  const { data, isLoading } = api.form.isFormSubmitted.useQuery();
 
   useEffect(() => {
     const selectedVersion = localStorage.getItem("selected-version");
@@ -32,7 +29,7 @@ export default function Dashboard() {
     }
   }, [selectedVersion, setSelectedVersion]);
 
-  if (isLoading || isPending || !user?.id) return <Loader />;
+  if (isLoading) return <Loader />;
 
   return (
     <main className="relative min-h-screen w-screen">
