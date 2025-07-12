@@ -105,6 +105,7 @@ export function OnboardingForm() {
       if (!user.given_name) return;
 
       if (localUser?.isOnBoarded) {
+        localStorage.setItem("isOnBoarded", "true");
         router.push(`/`);
         setLoading(false);
       }
