@@ -92,59 +92,66 @@ export function TodosChart({ selectedVersion }: { selectedVersion: string }) {
     })();
   }, [timeRange, selectedVersion, data?.success, data?.data.todos]);
 
-  if (isLoading) return <Loader />;
-
   return (
     <Card>
       <CardHeader>
         <CardTitle>Todos Chart</CardTitle>
       </CardHeader>
       <CardContent>
-        <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger
-            className="w-[160px] rounded-lg sm:ml-auto"
-            aria-label="Select a value"
-          >
-            <SelectValue placeholder="Last 3 months" />
-          </SelectTrigger>
-          <SelectContent className="rounded-xl">
-            <SelectItem value="90d" className="rounded-lg">
-              Last 3 months
-            </SelectItem>
-            <SelectItem value="30d" className="rounded-lg">
-              Last 30 days
-            </SelectItem>
-            <SelectItem value="7d" className="rounded-lg">
-              Last 7 days
-            </SelectItem>
-          </SelectContent>
-        </Select>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <>
+            <Select value={timeRange} onValueChange={setTimeRange}>
+              <SelectTrigger
+                className="w-[160px] rounded-lg sm:ml-auto"
+                aria-label="Select a value"
+              >
+                <SelectValue placeholder="Last 3 months" />
+              </SelectTrigger>
+              <SelectContent className="rounded-xl">
+                <SelectItem value="90d" className="rounded-lg">
+                  Last 3 months
+                </SelectItem>
+                <SelectItem value="30d" className="rounded-lg">
+                  Last 30 days
+                </SelectItem>
+                <SelectItem value="7d" className="rounded-lg">
+                  Last 7 days
+                </SelectItem>
+              </SelectContent>
+            </Select>
 
-        <ChartContainer config={todosChartConfig} className="h-[50vh] w-full">
-          <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="dashed" />}
-            />
-            <Bar
-              dataKey="tasksCompleted"
-              fill="var(--color-completed)"
-              radius={10}
-            />
-            <Bar
-              dataKey="tasksPlanned"
-              fill="var(--color-planned)"
-              radius={10}
-            />
-          </BarChart>
-        </ChartContainer>
+            <ChartContainer
+              config={todosChartConfig}
+              className="h-[50vh] w-full"
+            >
+              <BarChart accessibilityLayer data={chartData}>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent indicator="dashed" />}
+                />
+                <Bar
+                  dataKey="tasksCompleted"
+                  fill="var(--color-completed)"
+                  radius={10}
+                />
+                <Bar
+                  dataKey="tasksPlanned"
+                  fill="var(--color-planned)"
+                  radius={10}
+                />
+              </BarChart>
+            </ChartContainer>
+          </>
+        )}
       </CardContent>
     </Card>
   );
