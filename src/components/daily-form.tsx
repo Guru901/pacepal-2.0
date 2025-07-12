@@ -109,8 +109,8 @@ export function DailyForm() {
   }
 
   return (
-    <div className="flex h-full w-screen items-center justify-center">
-      <Card className="mx-auto w-full max-w-6xl border-white/40 shadow-2xl">
+    <div className="flex min-h-screen w-screen items-center justify-center">
+      <Card className="mx-auto w-full max-w-3xl border-white/40 shadow-2xl">
         <CardHeader>
           <CardTitle className="text-center text-2xl font-bold">
             Daily Reflection
@@ -118,7 +118,7 @@ export function DailyForm() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6">
               {/* First column */}
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -202,6 +202,7 @@ export function DailyForm() {
                       render={({ field }) => (
                         <Input
                           type="number"
+                          step={0.5}
                           id="tasksCompleted"
                           {...field}
                           onChange={(e) =>
@@ -224,6 +225,7 @@ export function DailyForm() {
                       render={({ field }) => (
                         <Input
                           type="number"
+                          step={0.5}
                           id="tasksPlanned"
                           {...field}
                           onChange={(e) =>
@@ -256,12 +258,12 @@ export function DailyForm() {
                             control={control}
                             render={({ field: { value, onChange } }) => (
                               <div className="flex flex-col space-y-1">
-                                <Label className="text-xs">
+                                <Label className="text-xs font-light">
                                   {slot.name} - {slot.hours} hours
                                 </Label>
                                 <Input
                                   type="number"
-                                  step="0.5"
+                                  step={0.5}
                                   placeholder={`${slot.name} hours`}
                                   onChange={(e) => {
                                     const hours = Number.parseFloat(
@@ -308,6 +310,7 @@ export function DailyForm() {
                     render={({ field }) => (
                       <Input
                         type="number"
+                        step={0.5}
                         id="overWork"
                         {...field}
                         onChange={(e) =>
@@ -371,6 +374,7 @@ export function DailyForm() {
                     render={({ field }) => (
                       <Input
                         type="number"
+                        step={0.5}
                         id="hoursSlept"
                         {...field}
                         onChange={(e) =>
