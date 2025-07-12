@@ -15,6 +15,7 @@ import { DistractionsChart } from "./(charts)/distractions-chart";
 import { ProductivityChart } from "@/app/(charts)/productivity-chart";
 import { useVersionStore } from "@/store/version-store";
 import { api } from "@/trpc/react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 export default function Dashboard() {
   const { localUser: user } = useGetUser();
@@ -58,7 +59,7 @@ export default function Dashboard() {
       </div>
 
       {!data?.data.isFormSubmitted && (
-        <div className="absolute inset-0 flex h-screen items-center justify-center bg-black/50">
+        <div className="absolute inset-0 flex min-h-screen translate-y-36 items-center justify-center bg-black/50">
           <DailyForm />
         </div>
       )}

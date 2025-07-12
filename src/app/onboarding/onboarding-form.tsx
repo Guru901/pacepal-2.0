@@ -87,6 +87,7 @@ export function OnboardingForm() {
       });
 
       if (data?.success) {
+        localStorage.setItem("isOnBoarded", "true");
         router.push("/");
       }
       setBtnLoading(false);
@@ -141,6 +142,7 @@ export function OnboardingForm() {
               <Input
                 type="number"
                 id="desiredSleepHours"
+                step={"0.5"}
                 {...field}
                 onChange={(e) => field.onChange(parseFloat(e.target.value))}
               />
@@ -178,6 +180,7 @@ export function OnboardingForm() {
                     onChange={(e) => field.onChange(parseFloat(e.target.value))}
                     placeholder="Hours"
                     className="w-20"
+                    step={"0.5"}
                   />
                 )}
               />
