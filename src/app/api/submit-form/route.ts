@@ -1,6 +1,7 @@
 import { SubmitFormSchema } from "@/lib/schema";
 import { connectToDB } from "@/server/database/connectToDb";
 import { Form } from "@/server/database/models/form-model";
+import { User } from "@/server/database/models/user-model";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { MongooseError } from "mongoose";
 import { type NextRequest, NextResponse } from "next/server";
@@ -8,11 +9,14 @@ import { type NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     await connectToDB();
-    getKindeServerSession();
 
     const req = await request.json();
 
     const safeReq = SubmitFormSchema.safeParse(req);
+
+    const user = await getKindeServerSession().getUser();
+    const userFromDatabase = await User.findOne({ kindeId: user.id });
+    const createdBy = userFromDatabase?._id;
 
     if (!safeReq.success) {
       return NextResponse.json({
@@ -36,7 +40,6 @@ export async function POST(request: NextRequest) {
       hoursSlept,
       version,
       overWork,
-      createdBy,
     } = safeReq.data;
 
     const form = await Form.create({
