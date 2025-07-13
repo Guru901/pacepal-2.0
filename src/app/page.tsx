@@ -20,8 +20,7 @@ export default function Dashboard() {
 
   const { setSelectedVersion } = useVersionStore();
 
-  const { data, isError, error, isPending, isFetching } =
-    api.form.isFormSubmitted.useQuery();
+  const { data } = api.form.isFormSubmitted.useQuery();
 
   useEffect(() => {
     const selectedVersion = localStorage.getItem("selected-version");
@@ -29,11 +28,6 @@ export default function Dashboard() {
       setSelectedVersion(selectedVersion);
     }
   }, [selectedVersion, setSelectedVersion]);
-
-  if (isPending || isFetching) return <Loader />;
-  if (isError) {
-    console.log(error);
-  }
 
   return (
     <main className="relative min-h-screen w-screen">
