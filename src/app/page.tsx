@@ -36,9 +36,7 @@ export default function Dashboard() {
   return (
     <main className="relative min-h-screen w-screen">
       <Navbar />
-      <div
-        className={data?.data.isFormSubmitted ? "" : "h-[90vh] overflow-hidden"}
-      >
+      <div className={isFormSubmitted ? "" : "h-[90vh] overflow-hidden"}>
         <div className="mx-4 flex flex-col gap-2">
           <SleepChart selectedVersion={selectedVersion} />
           <TodosChart selectedVersion={selectedVersion} />
