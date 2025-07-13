@@ -2,8 +2,7 @@
 
 import { DailyForm } from "@/components/daily-form";
 import Navbar from "@/components/navbar";
-import { useEffect } from "react";
-import { Loader } from "@/components/loading";
+import { useEffect, useState } from "react";
 import { SleepChart } from "./(charts)/sleep-chart";
 import { TodosChart } from "./(charts)/todos-chart";
 import { WorkChart } from "./(charts)/work-chart";
@@ -19,6 +18,7 @@ export default function Dashboard() {
   const { selectedVersion } = useVersionStore();
 
   const { setSelectedVersion } = useVersionStore();
+  const [isFormSubmitted, setIsFormSubmitted] = useState(true);
 
   const { data } = api.form.isFormSubmitted.useQuery();
 
@@ -28,6 +28,10 @@ export default function Dashboard() {
       setSelectedVersion(selectedVersion);
     }
   }, [selectedVersion, setSelectedVersion]);
+
+  useEffect(() => {
+    setIsFormSubmitted(!data?.data.isFormSubmitted);
+  }, [data]);
 
   return (
     <main className="relative min-h-screen w-screen">
@@ -53,7 +57,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {!data?.data.isFormSubmitted && (
+      {!isFormSubmitted && (
         <div className="absolute inset-0 flex min-h-screen translate-y-36 items-center justify-center bg-black/50">
           <DailyForm />
         </div>
