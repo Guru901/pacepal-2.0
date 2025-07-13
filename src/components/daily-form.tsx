@@ -38,7 +38,6 @@ export function DailyForm() {
     control,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = useForm<DailyFormData>({
     resolver: zodResolver(DailyFormSchema),
     defaultValues: {
@@ -54,14 +53,10 @@ export function DailyForm() {
       hoursWorked: [],
       overWork: 0,
       selectedVersion: selectedVersion,
-      userId: user?.mongoId,
     },
   });
 
   async function onSubmit(formData: DailyFormData) {
-    if (!formData.userId) return;
-    setValue("userId", user?.mongoId);
-
     const hoursPlanned = user.versions
       .find((version) => version.versionName === selectedVersion)
       ?.data.slots.reduce((acc, slot) => {
@@ -89,7 +84,6 @@ export function DailyForm() {
           hoursPlanned: parseInt(hoursPlanned?.toString() ?? "") ?? 0,
           hoursWorked: formData.hoursWorked,
           followedSchedule: formData.followedSchedule,
-          createdBy: user.mongoId,
         }),
       });
       const data = (await res.json()) as {
@@ -463,6 +457,11 @@ export function DailyForm() {
                   {errors.mood && (
                     <p className="text-sm text-red-500">
                       {errors.mood.message}
+                    </p>
+                  )}
+                  {errors.root && (
+                    <p className="text-sm text-red-500">
+                      {errors.root.message}
                     </p>
                   )}
                 </div>
