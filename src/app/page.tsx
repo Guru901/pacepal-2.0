@@ -30,7 +30,7 @@ export default function Dashboard() {
   }, [selectedVersion, setSelectedVersion]);
 
   useEffect(() => {
-    setIsFormSubmitted(!data?.data.isFormSubmitted);
+    setIsFormSubmitted(Boolean(data?.data.isFormSubmitted));
   }, [data]);
 
   return (
