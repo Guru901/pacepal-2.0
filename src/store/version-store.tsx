@@ -15,7 +15,7 @@ export const useVersionStore = create<VersionStoreActions>()(
     }),
     {
       name: "version-storage",
-      storage: createJSONStorage(() => sessionStorage),
-    }
-  )
+      storage: createJSONStorage(() => localStorage),
+    },
+  ),
 );
